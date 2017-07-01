@@ -6,7 +6,7 @@ import List from './List'
 import Filter from './Filter'
 
 const Query = ({ location, dispatch, record, loading }) => {
-  const { list, pagination, isMotion, activeTabKey } = record
+  const { list, pagination, isMotion } = record
   const { pageSize } = pagination
 
   const listProps = {
@@ -15,7 +15,6 @@ const Query = ({ location, dispatch, record, loading }) => {
     pagination,
     location,
     isMotion,
-    activeTabKey,
     onChange (page) {
       const { query, pathname } = location
       dispatch(routerRedux.push({

@@ -5,7 +5,7 @@ module.exports = {
   logo: '/logo.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: 'http://localhost:9000/api/v1',
   YQL: ['http://www.zuimeitianqi.com'],
   CORS: ['http://localhost:7000'],
   openPages: ['/login'],

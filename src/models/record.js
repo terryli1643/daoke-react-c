@@ -1,5 +1,4 @@
 import { create, remove, update, query, recordFlow } from '../services/record'
-import { parse } from 'qs'
 
 export default {
   namespace: 'record',
@@ -36,18 +35,23 @@ export default {
   },
 
   effects: {
-    *query ({ payload }, { call, put }) {
-      const data = yield call(query, parse(payload))
+    *query ({ payload = {} }, { call, put }) {
+      const data = yield call(query, payload)
       if (data) {
         yield put({
           type: 'querySuccess',
           payload: {
             list: data.data,
-            pagination: data.page,
+            pagination: {
+              current: Number(payload.page) || 1,
+              pageSize: Number(payload.pageSize) || 10,
+              total: data.total,
+            },
           },
         })
       }
     },
+
     *'delete' ({ payload }, { call, put }) {
       const data = yield call(remove, { id: payload })
       if (data && data.success) {
