@@ -34,6 +34,7 @@ const Query = ({ location, dispatch, record, loading }) => {
       ...location.query,
     },
     onFilterChange (value) {
+      console.log(location.pathname)
       dispatch(routerRedux.push({
         pathname: location.pathname,
         query: {

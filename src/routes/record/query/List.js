@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Table } from 'antd'
 import styles from './List.less'
 import classnames from 'classnames'
-import AnimTableBody from '../../../components/DataTable/AnimTableBody'
 
 const List = ({ isMotion, location, ...tableProps }) => {
   const columnsEvent = () => {
@@ -24,15 +23,6 @@ const List = ({ isMotion, location, ...tableProps }) => {
     ]
   }
 
-  const getBodyWrapperProps = {
-    page: location.query.page,
-    current: tableProps.pagination.current,
-  }
-
-  const getBodyWrapper = body => {
-    return isMotion ? <AnimTableBody {...getBodyWrapperProps} body={body} /> : body
-  }
-
   return (
     <div>
       <Table
@@ -41,7 +31,8 @@ const List = ({ isMotion, location, ...tableProps }) => {
         bordered
         columns={columnsEvent()}
         simple
-        getBodyWrapper={getBodyWrapper}
+        rowKey={record => record.id}
+        expandedRowRender={record => <p>{record.orderNumber}<br />{record.type}<br />{record.receiverAddress}<br />{record.content}<br />{record.time}</p>}
       />
     </div>
   )

@@ -18,7 +18,7 @@ module.exports = {
     posts: '/posts',
     user: '/user/:id',
     dashboard: '/dashboard',
-    record: '/record',
+    record: '/record/query',
     flow: '/record-flow',
   },
 }

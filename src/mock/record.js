@@ -3,7 +3,6 @@ const Mock = require('mockjs')
 const config = require('../utils/config')
 const { apiPrefix } = config
 
-
 let recordFlowData = Mock.mock({
   'data|10': [
     {
@@ -20,25 +19,28 @@ let recordFlowData = Mock.mock({
 let recordListDate = Mock.mock({
   'data|80-100': [
     {
-      id: '@id',
-      name: '@name',
-      nickName: '@last',
-      phone: /^1[34578]\d{9}$/,
-      'age|11-99': 1,
-      address: '@county(true)',
-      isMale: '@boolean',
-      email: '@email',
-      createTime: '@datetime',
-      avatar () {
-        return Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', this.nickName.substr(0, 1))
-      },
+      'id|+1': 1,
+      senderName: '@cname',
+      senderMobile: /^1[34578]\d{9}$/,
+      receiverName: '@cname',
+      receiverMobile: /^1[34578]\d{9}$/,
+      receiverAddress: '@county(true)',
+      'trackingNumber|1000000000-9999999999': 1,
+      'type|1': [ '普通件', '刷单件' ],
+      'orderNumber|1000000000-9999999999': 1,
+      content: '@csentence',
+      time: '@datetime'
     },
   ],
+  page: {
+    total: 100,
+    current: 1,
+  },
 })
 
 module.exports = {
 
-  [`GET ${apiPrefix}/record`] (req, res) {
+  [`GET ${apiPrefix}/record/query`] (req, res) {
     const page = req.query
     const pageSize = page.pageSize || 10
     const currentPage = page.page || 1
@@ -49,12 +51,12 @@ module.exports = {
     let newData = recordListDate.data.concat()
     if (page.keyword || page.timeRange) {
       const d = newData.filter((item) => {
-        let result1 = item[ 'senderName' ].indexOf(decodeURI(page.keyword));
-        let result2 = item[ 'senderMobile' ].toString().indexOf(decodeURI(page.keyword));
-        let result3 = item[ 'receiverName' ].indexOf(decodeURI(page.keyword));
-        let result4 = item[ 'receiverMobile' ].toString().indexOf(decodeURI(page.keyword));
-        let result5 = item[ 'trackingNumber' ].toString().indexOf(decodeURI(page.keyword));
-        let result6 = item[ 'orderNumber' ].toString().indexOf(decodeURI(page.keyword));
+        let result1 = item['senderName'].indexOf(decodeURI(page.keyword));
+        let result2 = item['senderMobile'].toString().indexOf(decodeURI(page.keyword));
+        let result3 = item['receiverName'].indexOf(decodeURI(page.keyword));
+        let result4 = item['receiverMobile'].toString().indexOf(decodeURI(page.keyword));
+        let result5 = item['trackingNumber'].toString().indexOf(decodeURI(page.keyword));
+        let result6 = item['orderNumber'].toString().indexOf(decodeURI(page.keyword));
         return result1 > -1 || result2 > -1 || result3 > -1 || result4 > -1 || result5 > -1 || result6 > -1;
       })
 

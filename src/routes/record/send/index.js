@@ -1,15 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import CommentsModal from './Modal'
+import CommentsModal from './CommentsModal'
+import SenderModal from './SenderModal'
 import {
   Select,
   Checkbox,
   Input,
   Button,
   Form,
+  Row,
+  Col,
 } from 'antd'
-
+const Option = Select.Option
 const FormItem = Form.Item
 const formItemLayout = {
   labelCol: {
@@ -19,10 +22,22 @@ const formItemLayout = {
     span: 14,
   },
 }
+// const FUAOptions = [{
+//   name: '罗汤汁',
+//   phone: '12345678',
+//   address: 'test1 fdsafdsaf jfkdsa',
+//   company: 'test company',
+// }, {
+//   name: '思达',
+//   phone: '3218679878',
+//   address: 'test1 fdsafdsaf jfkdsa',
+//   company: 'test company',
+// }]
 
-const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } }) => {
-  const { modalVisible } = record
-  const modalProps = {
+const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsValue } }) => {
+  const { modalVisible, senderModalVisible } = record
+  const { senderFrequentContacts } = contact
+  const commentsModalProps = {
     visible: modalVisible,
     onOk (value) {
       dispatch({
@@ -36,9 +51,32 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
       })
     },
   }
-  const showModal = () => {
+
+  const senderModalProps = {
+    visible: senderModalVisible,
+    onOk (value) {
+      dispatch({
+        type: 'record/hideSenderModal',
+        payload: value,
+      })
+      setFieldsValue({ remark: value })
+    },
+    onCancel () {
+      dispatch({
+        type: 'record/hideSenderModal',
+      })
+    },
+  }
+
+  const showCommentsModal = () => {
     dispatch({
       type: 'record/showModal',
+    })
+  }
+
+  const showSenderModal = () => {
+    dispatch({
+      type: 'record/showSenderModal',
     })
   }
 
@@ -55,7 +93,26 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
                   whitespace: true,
                 },
               ],
-            })(<Input />)
+            })(
+              <Row>
+                <Col>
+                  <Select
+                    size="large"
+                    placeholder="常用发件人"
+                  >
+                    {senderFrequentContacts.map((item) => {
+                      return (
+                        <Option value={item.name}>
+                          {`${item.name} - ${item.phone}`}
+                        </Option>)
+                    })}
+                  </Select>
+                </Col>
+                <Col>
+                  <a href="#" onClick={showSenderModal}>添加地址</a>
+                </Col>
+              </Row>
+            )
           }
         </FormItem>
         <FormItem hasFeedback label="发件人" {...formItemLayout}>
@@ -64,7 +121,7 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
               rules: [
                 {
                   required: true,
-                  message: '请输入发件人姓名',
+                  message: '请输入发件人信息',
                   whitespace: true,
                 },
               ],
@@ -77,6 +134,7 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
               rules: [
                 {
                   required: true,
+                  message: '请输入快递类型',
                   whitespace: true,
                 },
               ],
@@ -152,7 +210,7 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
                   whitespace: true,
                 },
               ],
-            })(<Input onClick={showModal} />)
+            })(<Input onClick={showCommentsModal} />)
           }
         </FormItem>
         <FormItem hasFeedback style={{ fontSize: 'small' }}>
@@ -170,7 +228,8 @@ const Send = ({ record, dispatch, form: { getFieldDecorator, setFieldsValue } })
         </FormItem>
       </Form>
       <Button type="primary" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
-      <CommentsModal {...modalProps} />
+      <CommentsModal {...commentsModalProps} />
+      <SenderModal {...senderModalProps} />
     </div>
   )
 }
@@ -179,5 +238,6 @@ Send.propTypes = {
   form: PropTypes.object,
   dispatch: PropTypes.func,
   record: PropTypes.object,
+  contact: PropTypes.object,
 }
-export default connect(({ record }) => ({ record }))(Form.create()(Send))
+export default connect(({ record, contact }) => ({ record, contact }))(Form.create()(Send))

@@ -1,6 +1,10 @@
-import { create, remove, update, query, recordFlow } from '../services/record'
+import modelExtend from 'dva-model-extend'
 
-export default {
+import * as recordService from '../services/record'
+const { create, remove, query, recordFlow } = recordService
+import { pageModel } from './common'
+
+export default modelExtend(pageModel, {
   namespace: 'record',
 
   state: {
@@ -8,8 +12,9 @@ export default {
     flowData: [],
     currentItem: {},
     modalVisible: false,
+    senderModalVisible: false,
     modalType: 'create',
-    isMotion: localStorage.getItem('antdAdminUserIsMotion') === 'true',
+    isMotion: false,
     pagination: {
       showSizeChanger: true,
       showQuickJumper: true,
@@ -24,7 +29,7 @@ export default {
   subscriptions: {
     setup ({ dispatch, history }) {
       history.listen(location => {
-        if (location.pathname === '/record') {
+        if (location.pathname === '/record/query') {
           dispatch({
             type: 'query',
             payload: location.query,
@@ -94,24 +99,7 @@ export default {
         })
       }
     },
-    *update ({ payload }, { select, call, put }) {
-      yield put({ type: 'hideModal' })
-      const id = yield select(({ users }) => users.currentItem.id)
-      const newUser = { ...payload, id }
-      const data = yield call(update, newUser)
-      if (data && data.success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: data.data,
-            pagination: {
-              total: data.page.total,
-              current: data.page.current,
-            },
-          },
-        })
-      }
-    },
+
     *switchIsMotion ({
       payload,
     }, { put }) {
@@ -146,33 +134,19 @@ export default {
       return { ...state, ...action.payload }
     },
 
-    querySuccess (state, action) {
-      const { list, pagination } = action.payload
-      return {
-        ...state,
-        list,
-        pagination: {
-          ...state.pagination,
-          ...pagination,
-        },
-      }
-    },
     showModal (state, action) {
       return { ...state, ...action.payload, modalVisible: true }
     },
     hideModal (state) {
       return { ...state, modalVisible: false }
     },
-    handleSwitchIsMotion (state) {
-      localStorage.setItem('antdAdminUserIsMotion', !state.isMotion)
-      return { ...state, isMotion: !state.isMotion }
+
+    showSenderModal (state, action) {
+      return { ...state, ...action.payload, senderModalVisible: true }
     },
-    handleSelectedRowKeysChanged (state, action) {
-      return { ...state, ...action.payload }
-    },
-    handleTabSwitch (state, action) {
-      return { ...state, ...action.payload }
+    hideSenderModal (state) {
+      return { ...state, senderModalVisible: false }
     },
 
   },
-}
+})

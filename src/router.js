@@ -32,6 +32,7 @@ const Routers = function ({ history, app }) {
           getComponent (nextState, cb) {
             require.ensure([], require => {
               registerModel(app, require('./models/record'))
+              registerModel(app, require('./models/contact'))
               cb(null, require('./routes/record/send'))
             }, 'record-send')
           },
