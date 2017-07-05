@@ -32,9 +32,9 @@ const formItemLayout = {
 //   phone: '3218679878',
 //   address: 'test1 fdsafdsaf jfkdsa',
 //   company: 'test company',
-// }]
+// }]form: {
 
-const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsValue } }) => {
+const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValue, getFieldDecorator, setFieldsValue } }) => {
   const { modalVisible, senderModalVisible } = record
   const { senderFrequentContacts } = contact
   const commentsModalProps = {
@@ -52,6 +52,23 @@ const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsV
     },
   }
 
+  const handleSubmit = (e) => {
+    console.log('handlesubmit')
+    e.preventDefault()
+    validateFields((errors) => {
+      if (errors) {
+        return
+      }
+      const data = {
+        ...getFieldsValue(),
+      }
+      data.address = data.address.join(' ')
+      dispatch({
+        type: 'record/create',
+        payload: data,
+      })
+    })
+  }
   const senderModalProps = {
     visible: senderModalVisible,
     onOk (value) {
@@ -79,10 +96,9 @@ const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsV
       type: 'record/showSenderModal',
     })
   }
-
   return (
     <div className="content-inner">
-      <Form layout="horizontal">
+      <Form layout="horizontal" onSubmit={handleSubmit}>
         <FormItem hasFeedback label="收件人" {...formItemLayout}>
           {
             getFieldDecorator('recipient', {
@@ -155,6 +171,7 @@ const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsV
                 {
                   required: true,
                   whitespace: true,
+                  message: '请输入物品类型',
                 },
               ],
             })(
@@ -218,16 +235,24 @@ const Send = ({ record, contact, dispatch, form: { getFieldDecorator, setFieldsV
             getFieldDecorator('agreement', {
               rules: [
                 {
-                  required: true,
+                  validator: (rule, value, callback) => {
+                    if (value !== true) {
+                      callback('请同意协议并勾选')
+                    } else {
+                      callback()
+                    }
+                  },
                 },
               ],
             })(
-              <Checkbox>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
+              <Checkbox defaultChecked>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
             )
           }
         </FormItem>
+        <FormItem>
+          <Button type="primary" htmlType="submit" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
+        </FormItem>
       </Form>
-      <Button type="primary" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
       <CommentsModal {...commentsModalProps} />
       <SenderModal {...senderModalProps} />
     </div>
@@ -239,5 +264,6 @@ Send.propTypes = {
   dispatch: PropTypes.func,
   record: PropTypes.object,
   contact: PropTypes.object,
+  item: PropTypes.object,
 }
 export default connect(({ record, contact }) => ({ record, contact }))(Form.create()(Send))
