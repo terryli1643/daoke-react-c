@@ -14,7 +14,7 @@ const formItemLayout = {
   },
 }
 
-const senderModal = ({
+const recipientModal = ({
   item = {},
   onOk,
   form: {
@@ -45,7 +45,7 @@ const senderModal = ({
 
   return (
     <Modal {...modalOpts}>
-      <h2>发件人信息</h2>
+      <h2>收件人信息</h2>
       <Form layout="horizontal">
         <FormItem label="姓名" hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
@@ -114,11 +114,11 @@ const senderModal = ({
   )
 }
 
-senderModal.propTypes = {
+recipientModal.propTypes = {
   form: PropTypes.object.isRequired,
   type: PropTypes.string,
   item: PropTypes.object,
   onOk: PropTypes.func,
 }
 
-export default Form.create()(senderModal)
+export default Form.create()(recipientModal)

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import CommentsModal from './CommentsModal'
 import SenderModal from './SenderModal'
+import RecipientModal from './RecipientModal'
 import {
   Select,
   Checkbox,
@@ -22,20 +23,9 @@ const formItemLayout = {
     span: 14,
   },
 }
-// const FUAOptions = [{
-//   name: '罗汤汁',
-//   phone: '12345678',
-//   address: 'test1 fdsafdsaf jfkdsa',
-//   company: 'test company',
-// }, {
-//   name: '思达',
-//   phone: '3218679878',
-//   address: 'test1 fdsafdsaf jfkdsa',
-//   company: 'test company',
-// }]form: {
 
 const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValue, getFieldDecorator, setFieldsValue } }) => {
-  const { modalVisible, senderModalVisible } = record
+  const { modalVisible, senderModalVisible, recipientModalVisible } = record
   const { senderFrequentContacts } = contact
   const commentsModalProps = {
     visible: modalVisible,
@@ -85,17 +75,39 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
     },
   }
 
+  const recipientModalProps = {
+    visible: recipientModalVisible,
+    onOk (value) {
+      dispatch({
+        type: 'record/hideRecipientModal',
+        payload: value,
+      })
+      setFieldsValue({ remark: value })
+    },
+    onCancel () {
+      dispatch({
+        type: 'record/hideRecipientModal',
+      })
+    },
+  }
+
   const showCommentsModal = () => {
     dispatch({
       type: 'record/showModal',
     })
   }
 
+  const showRecipientModal = () => {
+    dispatch({
+      type: 'record/showRecipientModal',
+    })
+  }
   const showSenderModal = () => {
     dispatch({
       type: 'record/showSenderModal',
     })
   }
+
   return (
     <div className="content-inner">
       <Form layout="horizontal" onSubmit={handleSubmit}>
@@ -125,7 +137,7 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
                   </Select>
                 </Col>
                 <Col>
-                  <a href="#" onClick={showSenderModal}>添加地址</a>
+                  <a href="#" onClick={showRecipientModal}>添加收件人</a>
                 </Col>
               </Row>
             )
@@ -141,7 +153,26 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
                   whitespace: true,
                 },
               ],
-            })(<Input />)
+            })(
+              <Row>
+                <Col>
+                  <Select
+                    size="large"
+                    placeholder="常用收件人"
+                  >
+                    {senderFrequentContacts.map((item) => {
+                      return (
+                        <Option value={item.name}>
+                          {`${item.name} - ${item.phone}`}
+                        </Option>)
+                    })}
+                  </Select>
+                </Col>
+                <Col>
+                  <a href="#" onClick={showSenderModal}>添加收件人</a>
+                </Col>
+              </Row>
+            )
           }
         </FormItem>
         <FormItem hasFeedback label="快递类型" {...formItemLayout}>
@@ -255,6 +286,7 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
       </Form>
       <CommentsModal {...commentsModalProps} />
       <SenderModal {...senderModalProps} />
+      <RecipientModal {...recipientModalProps} />
     </div>
   )
 }

@@ -13,6 +13,7 @@ export default modelExtend(pageModel, {
     currentItem: {},
     modalVisible: false,
     senderModalVisible: false,
+    recipientModalVisible: false,
     modalType: 'create',
     isMotion: false,
     pagination: {
@@ -147,6 +148,11 @@ export default modelExtend(pageModel, {
     hideSenderModal (state) {
       return { ...state, senderModalVisible: false }
     },
-
+    showRecipientModal (state, action) {
+      return { ...state, ...action.payload, recipientModalVisible: true }
+    },
+    hideRecipientModal (state) {
+      return { ...state, recipientModalVisible: false }
+    },
   },
 })
