@@ -16,8 +16,17 @@ export default {
   },
   subscriptions: {
 
-    setup ({ dispatch }) {
-      dispatch({ type: 'query' })
+    setup ({ dispatch, history }) {
+      // dispatch({ type: 'query' })
+      history.listen(location => {
+        if (location.pathname === '/record/query' || location.pathname === '/account') {
+          dispatch({
+            type: 'query',
+            payload: location.query,
+          })
+        }
+      })
+
       let tid
       window.onresize = () => {
         clearTimeout(tid)
