@@ -13,6 +13,10 @@ export default {
       payload,
     }, { put, call }) {
       yield put({ type: 'showLoginLoading' })
+      payload = {
+        ...payload,
+        appId: 'C_SITE',
+      }
       const data = yield call(login, payload)
       yield put({ type: 'hideLoginLoading' })
       if (data.success) {
