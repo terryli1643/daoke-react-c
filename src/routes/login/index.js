@@ -37,6 +37,7 @@ const Login = ({
           {getFieldDecorator('login', {
             rules: [
               {
+                initialValue: '13438881540',
                 required: true,
               },
             ],
@@ -46,6 +47,7 @@ const Login = ({
           {getFieldDecorator('password', {
             rules: [
               {
+                initialValue: '123456',
                 required: true,
               },
             ],

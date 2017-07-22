@@ -9,6 +9,14 @@ export default {
   entry: 'src/index.js',
   svgSpriteLoaderDirs: svgSpriteDirs,
   "theme": "./theme.config.js",
+  // 接口代理示例
+  "proxy": {
+    "/api/v1": {
+      "target": "http://192.168.1.110:8085",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/v1" : "/" }
+    },
+  },
   "env": {
       "development": {
         "extraBabelPlugins": [

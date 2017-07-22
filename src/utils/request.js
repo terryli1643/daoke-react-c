@@ -14,6 +14,7 @@ const fetch = (options) => {
     data,
     fetchType,
     url,
+    headers,
   } = options
 
   const cloneData = lodash.cloneDeep(data)
@@ -58,23 +59,38 @@ const fetch = (options) => {
     case 'get':
       return axios.get(url, {
         params: cloneData,
+        headers,
       })
     case 'delete':
       return axios.delete(url, {
         data: cloneData,
+        headers,
       })
     case 'post':
-      return axios.post(url, cloneData)
+      return axios.post(url, {
+        ...cloneData,
+        headers,
+      })
     case 'put':
-      return axios.put(url, cloneData)
+      return axios.put(url, {
+        ...cloneData,
+        headers,
+      })
     case 'patch':
-      return axios.patch(url, cloneData)
+      return axios.patch(url, {
+        ...cloneData,
+        headers,
+      })
     default:
       return axios(options)
   }
 }
 
 export default function request (options) {
+  let headers = new Headers()
+  const token = localStorage.getItem('token')
+  headers.append('Authorization', token)
+
   if (options.url && options.url.indexOf('//') > -1) {
     const origin = `${options.url.split('//')[0]}//${options.url.split('//')[1].split('/')[0]}`
     if (window.location.origin !== origin) {
@@ -87,7 +103,8 @@ export default function request (options) {
       }
     }
   }
-
+  options.fetchType = 'CORS'
+  options.headers = { Authorization: token }
   return fetch(options).then((response) => {
     const { statusText, status } = response
     let data = options.fetchType === 'YQL' ? response.data.query.results.json : response.data
