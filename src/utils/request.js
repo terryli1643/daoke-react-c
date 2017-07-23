@@ -86,7 +86,8 @@ const fetch = (options) => {
   }
 }
 
-export default function request (options) {
+export default function
+  request (options) {
   let headers = new Headers()
   const token = localStorage.getItem('token')
   headers.append('Authorization', token)

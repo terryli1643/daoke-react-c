@@ -7,7 +7,7 @@ module.exports = {
   iconFontJS: '/iconfont.js',
   baseURL: 'http://localhost:9000',
   YQL: ['http://www.zuimeitianqi.com'],
-  CORS: ['http://192.168.1.117:8081'],
+  CORS: ['http://localhost:8085'],
   openPages: ['/login'],
   apiPrefix: '/api/v1',
   api: {
@@ -18,7 +18,9 @@ module.exports = {
     posts: '/posts',
     user: '/api/v1/user',
     dashboard: '/dashboard',
-    record: '/record/query',
-    flow: '/record-flow',
+    record: '/api/v1/orders',
+    flow: '/api/v1/record-flow',
+    contact: '/api/v1/contactinfo',
+    contacts: '/api/v1/contactinfos',
   },
 }

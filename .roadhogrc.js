@@ -12,7 +12,7 @@ export default {
   // 接口代理示例
   "proxy": {
     "/api/v1": {
-      "target": "http://192.168.1.110:8085",
+      "target": "http://localhost:8085",
       "changeOrigin": true,
       "pathRewrite": { "^/api/v1" : "/" }
     },

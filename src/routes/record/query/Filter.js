@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import { FilterItem } from '../../../components'
-import { Form, Button, Row, Col, DatePicker } from 'antd'
+import { Form, Input, Button, Row, Col, DatePicker } from 'antd'
 import 'moment/locale/zh-cn'
 
 moment.locale('zh-cn')
@@ -25,7 +25,6 @@ const Filter = ({
   form: {
     getFieldDecorator,
     getFieldsValue,
-    setFieldsValue,
   },
 }) => {
   const handleFields = (fields) => {
@@ -42,21 +41,6 @@ const Filter = ({
     onFilterChange(fields)
   }
 
-  const handleReset = () => {
-    const fields = getFieldsValue()
-    for (let item in fields) {
-      if ({}.hasOwnProperty.call(fields, item)) {
-        if (fields[item] instanceof Array) {
-          fields[item] = []
-        } else {
-          fields[item] = undefined
-        }
-      }
-    }
-    setFieldsValue(fields)
-    // handleSubmit()
-  }
-
   const handleChange = (key, values) => {
     let fields = getFieldsValue()
     fields[key] = values
@@ -68,16 +52,22 @@ const Filter = ({
     <Row gutter={24}>
       <Col {...ColProps} xl={{ span: 6 }} md={{ span: 8 }} sm={{ span: 12 }}>
         <FilterItem label="时间">
-          {getFieldDecorator('createTime')(
-            <DatePicker format="YYYY-MM-DD" onChange={handleChange.bind('', 'createTime')} />
+          {getFieldDecorator('startDate')(
+            <DatePicker format="YYYY-MM-DD" onChange={handleChange.bind('', 'startDate')} />
+          )}
+        </FilterItem>
+      </Col>
+      <Col {...ColProps} xl={{ span: 2 }} md={{ span: 4 }} sm={{ span: 6 }}>
+        <FilterItem label="条件">
+          {getFieldDecorator('startDate')(
+            <Input onChange={handleChange.bind('', 'startDate')} />
           )}
         </FilterItem>
       </Col>
       <Col {...TwoColProps} xl={{ span: 10 }} md={{ span: 24 }} sm={{ span: 24 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div >
-            <Button type="primary" size="large" className="margin-right" onClick={handleSubmit}>Search</Button>
-            <Button size="large" onClick={handleReset}>Reset</Button>
+            <Button type="primary" size="large" className="margin-right" onClick={handleSubmit}>查询</Button>
           </div>
         </div>
       </Col>

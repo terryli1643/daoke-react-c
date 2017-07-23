@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Modal, Cascader, Checkbox } from 'antd'
-import city from '../../../utils/city'
+import { Form, Input, Select, Modal, Cascader, Checkbox } from 'antd'
+import city from '../../utils/city'
 
 const FormItem = Form.Item
 
@@ -14,7 +14,7 @@ const formItemLayout = {
   },
 }
 
-const recipientModal = ({
+const senderModal = ({
   item = {},
   onOk,
   form: {
@@ -22,6 +22,7 @@ const recipientModal = ({
     validateFields,
     getFieldsValue,
   },
+  senderContacts,
   ...modalProps
 }) => {
   const handleOk = () => {
@@ -45,7 +46,7 @@ const recipientModal = ({
 
   return (
     <Modal {...modalOpts}>
-      <h2>收件人信息</h2>
+      <h2>发件人信息</h2>
       <Form layout="horizontal">
         <FormItem label="姓名" hasFeedback {...formItemLayout}>
           {getFieldDecorator('name', {
@@ -56,7 +57,17 @@ const recipientModal = ({
                 message: '请填写发件人姓名',
               },
             ],
-          })(<Input />)}
+          })(<Select
+            size="large"
+            placeholder="常用发件人"
+          >
+            {senderContacts.map((sender) => {
+              return (
+                <Option value={sender.name}>
+                  {`${sender.name} - ${sender.phone}`}
+                </Option>)
+            })}
+          </Select>)}
         </FormItem>
         <FormItem label="电话" hasFeedback {...formItemLayout}>
           {getFieldDecorator('phone', {
@@ -89,8 +100,8 @@ const recipientModal = ({
           />)}
         </FormItem>
         <FormItem label="详细地址" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('addressDetail', {
-            initialValue: item.addressDetail,
+          {getFieldDecorator('street', {
+            initialValue: item.street,
             rules: [
               {
                 required: true,
@@ -114,11 +125,12 @@ const recipientModal = ({
   )
 }
 
-recipientModal.propTypes = {
+senderModal.propTypes = {
   form: PropTypes.object.isRequired,
   type: PropTypes.string,
   item: PropTypes.object,
   onOk: PropTypes.func,
+  senderContacts: PropTypes.object,
 }
 
-export default Form.create()(recipientModal)
+export default Form.create()(senderModal)

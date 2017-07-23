@@ -43,10 +43,10 @@ export default {
       payload,
     }, { call, put }) {
       const data = yield call(query, parse(payload))
-      if (data.success && data.username) {
+      if (data.success && data.result.jwtUser) {
         yield put({
           type: 'querySuccess',
-          payload: data,
+          payload: data.result.jwtUser,
         })
         if (location.pathname === '/login') {
           yield put(routerRedux.push('/home'))
@@ -72,8 +72,9 @@ export default {
       //   throw (data)
       // }
       localStorage.removeItem('token')
-      // yield put({ type: 'query' })
-      yield put(routerRedux.push('/home'))
+      yield put({ type: 'query' })
+      // state.user = ''
+      // yield put(routerRedux.push('/home'))
     },
 
     *changeNavbar ({

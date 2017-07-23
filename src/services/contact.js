@@ -1,10 +1,18 @@
 import { request, config } from '../utils'
 const { api } = config
-const { contact } = api
+const { contact, contacts } = api
 
 export async function query (params) {
   return request({
     url: contact,
+    method: 'get',
+    data: params,
+  })
+}
+
+export async function queryAll (params) {
+  return request({
+    url: contacts,
     method: 'get',
     data: params,
   })

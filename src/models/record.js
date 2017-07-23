@@ -9,6 +9,9 @@ export default modelExtend(pageModel, {
 
   state: {
     list: [],
+    recipient: {},
+    sender: {},
+    order: {},
     flowData: [],
     currentItem: {},
     modalVisible: false,
@@ -43,15 +46,31 @@ export default modelExtend(pageModel, {
   effects: {
     *query ({ payload = {} }, { call, put }) {
       const data = yield call(query, payload)
-      if (data) {
+      if (data.success) {
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: data.result.orders,
+            pagination: {
+              current: Number(payload.page) || 1,
+              pageSize: Number(payload.pageSize) || 10,
+              total: data.result.totalPage,
+            },
+          },
+        })
+      }
+    },
+
+    *setRecipient ({ payload }, { call, put }) {
+      const data = yield call(remove, { id: payload })
+      if (data && data.success) {
         yield put({
           type: 'querySuccess',
           payload: {
             list: data.data,
             pagination: {
-              current: Number(payload.page) || 1,
-              pageSize: Number(payload.pageSize) || 10,
-              total: data.total,
+              total: data.page.total,
+              current: data.page.current,
             },
           },
         })
@@ -89,6 +108,7 @@ export default modelExtend(pageModel, {
         })
       }
     },
+
     *'recordFlow' ({ payload }, { call, put }) {
       const data = yield call(recordFlow, payload)
       if (data && data.success) {
@@ -131,6 +151,16 @@ export default modelExtend(pageModel, {
   },
 
   reducers: {
+    setRecipient (state, action) {
+      console.log(action.payload)
+      return { ...state, ...action.paylaod }
+    },
+
+    setSender (state, action) {
+      console.log(action.payload)
+      return { ...state, ...action.paylaod }
+    },
+
     recordFlowSuccess (state, action) {
       return { ...state, ...action.payload }
     },

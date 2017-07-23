@@ -1,17 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import CommentsModal from './CommentsModal'
-import SenderModal from './SenderModal'
-import RecipientModal from './RecipientModal'
+import CommentsModal from '../../../components/order/CommentsModal'
+import SenderModal from '../../../components/order/SenderModal'
+import RecipientModal from '../../../components/order/RecipientModal'
 import {
   Select,
   Checkbox,
   Input,
   Button,
   Form,
-  Row,
-  Col,
 } from 'antd'
 const Option = Select.Option
 const FormItem = Form.Item
@@ -26,7 +24,7 @@ const formItemLayout = {
 
 const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValue, getFieldDecorator, setFieldsValue } }) => {
   const { modalVisible, senderModalVisible, recipientModalVisible } = record
-  const { senderFrequentContacts } = contact
+  const { list } = contact
   const commentsModalProps = {
     visible: modalVisible,
     onOk (value) {
@@ -41,9 +39,11 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
       })
     },
   }
+  const senderContacts = list
+
+  const recipientContacts = list
 
   const handleSubmit = (e) => {
-    console.log('handlesubmit')
     e.preventDefault()
     validateFields((errors) => {
       if (errors) {
@@ -59,34 +59,77 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
       })
     })
   }
+  const handleChange = (value) => {
+    console.log(`selected ${value}`)
+  }
+
   const senderModalProps = {
     visible: senderModalVisible,
+    senderContacts,
+    handleChange,
     onOk (value) {
       dispatch({
-        type: 'record/hideSenderModal',
+        type: 'record/setSender',
         payload: value,
       })
-      setFieldsValue({ remark: value })
+
+      dispatch({
+        type: 'record/hideSenderModal',
+      })
+      setFieldsValue('senderName', value.name)
     },
+
     onCancel () {
       dispatch({
         type: 'record/hideSenderModal',
+      })
+    },
+
+    getContacts () {
+      dispatch({
+        type: 'contact/queryAll',
       })
     },
   }
 
   const recipientModalProps = {
     visible: recipientModalVisible,
+    recipientContacts,
+
+    handleChange,
     onOk (value) {
+      console.log(value)
+      const address = value.address.split(' ')
+      const province = address[0]
+      const city = address[1]
+      const district = address[2]
+      const payload = {
+        ...value,
+        province,
+        city,
+        district,
+        type: 0,
+      }
+      dispatch({
+        type: 'record/setRecipient',
+        payload,
+      })
+
       dispatch({
         type: 'record/hideRecipientModal',
-        payload: value,
       })
-      setFieldsValue({ remark: value })
+      setFieldsValue('recipientName', value.name)
     },
+
     onCancel () {
       dispatch({
         type: 'record/hideRecipientModal',
+      })
+    },
+
+    getContacts () {
+      dispatch({
+        type: 'contact/queryAll',
       })
     },
   }
@@ -113,7 +156,7 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
       <Form layout="horizontal" onSubmit={handleSubmit}>
         <FormItem hasFeedback label="收件人" {...formItemLayout}>
           {
-            getFieldDecorator('recipient', {
+            getFieldDecorator('recipientName', {
               rules: [
                 {
                   required: true,
@@ -122,30 +165,13 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
                 },
               ],
             })(
-              <Row>
-                <Col>
-                  <Select
-                    size="large"
-                    placeholder="常用发件人"
-                  >
-                    {senderFrequentContacts.map((item) => {
-                      return (
-                        <Option value={item.name}>
-                          {`${item.name} - ${item.phone}`}
-                        </Option>)
-                    })}
-                  </Select>
-                </Col>
-                <Col>
-                  <a href="#" onClick={showRecipientModal}>添加收件人</a>
-                </Col>
-              </Row>
+              <Input onClick={showRecipientModal} />
             )
           }
         </FormItem>
         <FormItem hasFeedback label="发件人" {...formItemLayout}>
           {
-            getFieldDecorator('sender', {
+            getFieldDecorator('senderName', {
               rules: [
                 {
                   required: true,
@@ -154,24 +180,7 @@ const Send = ({ record, contact, dispatch, form: { validateFields, getFieldsValu
                 },
               ],
             })(
-              <Row>
-                <Col>
-                  <Select
-                    size="large"
-                    placeholder="常用收件人"
-                  >
-                    {senderFrequentContacts.map((item) => {
-                      return (
-                        <Option value={item.name}>
-                          {`${item.name} - ${item.phone}`}
-                        </Option>)
-                    })}
-                  </Select>
-                </Col>
-                <Col>
-                  <a href="#" onClick={showSenderModal}>添加收件人</a>
-                </Col>
-              </Row>
+              <Input href="#" onClick={showSenderModal} />
             )
           }
         </FormItem>

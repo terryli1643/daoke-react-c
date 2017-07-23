@@ -1,5 +1,5 @@
 import { login } from '../services/login'
-// import { routerRedux } from 'dva/router'
+import { routerRedux } from 'dva/router'
 import { queryURL } from '../utils'
 
 export default {
@@ -21,17 +21,16 @@ export default {
       yield put({ type: 'hideLoginLoading' })
       if (data.success) {
         const from = queryURL('from')
-        console.log(from)
-        localStorage.setItem('token', data.token)
+        localStorage.setItem('token', data.result.token)
 
         yield put({
           type: 'app/query',
         })
-        // if (from) {
-        //   yield put(routerRedux.push(from))
-        // } else {
-        //   yield put(routerRedux.push('/home'))
-        // }
+        if (from) {
+          yield put(routerRedux.push(from))
+        } else {
+          yield put(routerRedux.push('/home'))
+        }
       } else {
         throw data
       }

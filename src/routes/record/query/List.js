@@ -9,16 +9,21 @@ const List = ({ isMotion, location, ...tableProps }) => {
     return [
       {
         title: '收件人姓名',
-        dataIndex: 'receiverName',
-        key: 'receiverName',
+        dataIndex: 'receiptName',
+        key: 'receiptName',
       }, {
         title: '收件人电话',
-        dataIndex: 'receiverMobile',
-        key: 'receiverMobile',
+        dataIndex: 'receiptMobile',
+        key: 'receiptMobile',
       }, {
         title: '快递单号',
-        dataIndex: 'trackingNumber',
-        key: 'trackingNumber',
+        dataIndex: 'logisticsCode',
+        key: 'logisticsCode',
+        render: (text, record) => {
+          return (
+            <div>{record.reused ? `${text.substring(0, text.length - 4)}****` : text} <br />{record.statusStr}</div>
+          )
+        },
       },
     ]
   }
@@ -32,7 +37,13 @@ const List = ({ isMotion, location, ...tableProps }) => {
         columns={columnsEvent()}
         simple
         rowKey={record => record.id}
-        expandedRowRender={record => <p>{record.orderNumber}<br />{record.type}<br />{record.receiverAddress}<br />{record.content}<br />{record.time}</p>}
+        expandedRowRender={
+          record => <div style={{ float: 'left' }}>
+            货物：{record.goodsType}<br />
+            地址：{record.receiptProvince} {record.receiptCity} {record.receiptDistrict} {record.receiptAddress}<br />
+            下单时间：{record.submitTimeStr}<br />
+            订单号：{record.orderCode}</div>
+        }
       />
     </div>
   )
