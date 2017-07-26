@@ -151,16 +151,6 @@ export default modelExtend(pageModel, {
   },
 
   reducers: {
-    setRecipient (state, action) {
-      console.log(action.payload)
-      return { ...state, ...action.paylaod }
-    },
-
-    setSender (state, action) {
-      console.log(action.payload)
-      return { ...state, ...action.paylaod }
-    },
-
     recordFlowSuccess (state, action) {
       return { ...state, ...action.payload }
     },
@@ -183,6 +173,20 @@ export default modelExtend(pageModel, {
     },
     hideRecipientModal (state) {
       return { ...state, recipientModalVisible: false }
+    },
+
+    setRecipient (state, action) {
+      // console.log(action.payload)
+      return { ...state, ...action.paylaod }
+    },
+
+    setSender (state, action) {
+      // console.log(action.payload)
+      return { ...state, ...action.paylaod }
+    },
+
+    setCurrentItem (state, action) {
+      return { ...state, ...action.paylaod }
     },
   },
 })
