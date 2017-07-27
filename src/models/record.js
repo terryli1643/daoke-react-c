@@ -9,9 +9,6 @@ export default modelExtend(pageModel, {
 
   state: {
     list: [],
-    recipient: {},
-    sender: {},
-    order: {},
     flowData: [],
     currentItem: {},
     modalVisible: false,
@@ -175,18 +172,9 @@ export default modelExtend(pageModel, {
       return { ...state, recipientModalVisible: false }
     },
 
-    setRecipient (state, action) {
-      // console.log(action.payload)
-      return { ...state, ...action.paylaod }
-    },
-
-    setSender (state, action) {
-      // console.log(action.payload)
-      return { ...state, ...action.paylaod }
-    },
-
-    setCurrentItem (state, action) {
-      return { ...state, ...action.paylaod }
+    setCurrentItem (state, { payload }) {
+      const { currentItem } = payload
+      return { ...state, currentItem }
     },
   },
 })

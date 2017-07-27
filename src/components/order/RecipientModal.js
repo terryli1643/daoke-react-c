@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Modal, Cascader, Checkbox } from 'antd'
+import { Row, Col, Form, Input, Select, Modal, Cascader, Checkbox } from 'antd'
 import city from '../../utils/city'
 
 const FormItem = Form.Item
@@ -43,7 +43,7 @@ class RecipientModal extends React.Component {
           ...getFieldsValue(),
           key: item.key,
         }
-        data.address = data.address.join(' ')
+        // data.address = data.address.join(' ')
         const payload = {
           recipient: {
             ...data,
@@ -62,6 +62,25 @@ class RecipientModal extends React.Component {
       <Modal {...modalOpts}>
         <h2>收件人信息</h2>
         <Form layout="horizontal">
+          <div className="ant-row ant-form-item">
+            <Row>
+              <Col span={6} className="ant-form-item-label"><label>常用发件人</label></Col>
+              <Col span={14} className="ant-form-item-control">
+                <Select
+                  size="large"
+                  placeholder="选择常用发件人"
+                  onChange={handleChange}
+                >
+                  {recipientContacts.map((contact) => {
+                    return (
+                      <Option value={contact.name}>
+                        {`${contact.name} - ${contact.phone}`}
+                      </Option>)
+                  })}
+                </Select>
+              </Col>
+            </Row>
+          </div>
           <FormItem label="姓名" hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
               rules: [
@@ -70,19 +89,7 @@ class RecipientModal extends React.Component {
                   message: '请填写发件人姓名',
                 },
               ],
-            })(<Select
-              size="large"
-              mode="tags"
-              placeholder="常用发件人"
-              onChange={handleChange}
-            >
-              {recipientContacts.map((contact) => {
-                return (
-                  <Option value={contact.name}>
-                    {`${contact.name} - ${contact.phone}`}
-                  </Option>)
-              })}
-            </Select>)}
+            })(<Input />)}
           </FormItem>
           <FormItem label="电话" hasFeedback {...formItemLayout}>
             {getFieldDecorator('phone', {
@@ -97,8 +104,9 @@ class RecipientModal extends React.Component {
               ],
             })(<Input />)}
           </FormItem>
+
           <FormItem label="地址" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('address', {
+            {getFieldDecorator('region', {
               rules: [
                 {
                   required: true,
@@ -113,7 +121,7 @@ class RecipientModal extends React.Component {
             />)}
           </FormItem>
           <FormItem label="详细地址" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('addressDetail', {
+            {getFieldDecorator('address', {
               rules: [
                 {
                   required: true,

@@ -84,7 +84,7 @@ const senderModal = ({
           })(<Input />)}
         </FormItem>
         <FormItem label="地址" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('address', {
+          {getFieldDecorator('region', {
             initialValue: item.address && item.address.split(' '),
             rules: [
               {
@@ -100,7 +100,7 @@ const senderModal = ({
           />)}
         </FormItem>
         <FormItem label="详细地址" hasFeedback {...formItemLayout}>
-          {getFieldDecorator('street', {
+          {getFieldDecorator('address', {
             initialValue: item.street,
             rules: [
               {

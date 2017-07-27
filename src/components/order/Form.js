@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Input, Select, Checkbox, Button } from 'antd'
-
+import CommentsModal from './CommentsModal'
+import SenderModal from './SenderModal'
+import RecipientModal from './RecipientModal'
 const FormItem = Form.Item
 const formItemLayout = {
   labelCol: {
@@ -13,14 +15,33 @@ const formItemLayout = {
 }
 
 class OrderForm extends React.Component {
-  // componentDidUpdate () {
-  //   this.setFields()
+  constructor (props) {
+    super(props)
+    const {
+      currentItem,
+    } = props
+    this.state = {
+      currentItem,
+    }
+  }
+
+  // componentWillMount = () => {
+  //   const { currentItem } = this.props
+  //   this.setFields(currentItem)
+  // }
+  //
+  // setFields = (recipient, currentItem) => {
+  //   const { form: { setFieldsValue } } = this.props
+  //   // setFieldsValue('recipientName', recipient.name)
+  //   setFieldsValue({})
   // }
 
-  setFields = () => {
-    const { recipient, currentItem, form: { setFieldsValue } } = this.props
-    setFieldsValue('recipientName', recipient.name)
-    setFieldsValue('remark', currentItem.remark)
+  getAddress = (addressList) => {
+    return {
+      city: addressList[1],
+      district: addressList[2],
+      province: addressList[0],
+    }
   }
 
   handleSubmit = (e) => {
@@ -33,7 +54,7 @@ class OrderForm extends React.Component {
       const data = {
         ...getFieldsValue(),
       }
-      data.address = data.address.join(' ')
+      // data.address = data.address.join(' ')
       dispatch({
         type: 'record/create',
         payload: data,
@@ -42,148 +63,274 @@ class OrderForm extends React.Component {
   }
 
   render () {
-    const { showCommentsModal, showSenderModal, showRecipientModal, form: { getFieldDecorator } } = this.props
+    const {
+      modalVisible,
+      recipientModalVisible,
+      senderModalVisible,
+      recipientContacts,
+      senderContacts,
+      showCommentsModal,
+      showSenderModal,
+      showRecipientModal,
+      form: { getFieldDecorator, setFieldsValue },
+      dispatch,
+    } = this.props
+
+    const recipientModalProps = {
+      visible: recipientModalVisible,
+      recipientContacts,
+
+      handleChange (value) {
+        console.log(`selected ${value}`)
+      },
+      onOk (value) {
+        dispatch({
+          type: 'record/setCurrentItem',
+          payload: {
+            currentItem: {
+              recipient: value,
+            },
+          },
+        })
+
+        if (value.recipient.frequentlyAddress) {
+          const addressList = value.recipient.region
+          const recipient = value.recipient
+          dispatch({
+            type: 'contact/create',
+            payload: {
+              address: recipient.address,
+              province: addressList[0],
+              city: addressList[1],
+              district: addressList[2],
+              company: recipient.company,
+              name: recipient.name,
+              phone: recipient.phone,
+              type: 0,
+            },
+          })
+        }
+
+        dispatch({
+          type: 'record/hideRecipientModal',
+        })
+
+        setFieldsValue({
+          recipientName: value.recipient.name,
+        })
+      },
+
+      onCancel () {
+        dispatch({
+          type: 'record/hideRecipientModal',
+        })
+      },
+
+      getContacts () {
+        dispatch({
+          type: 'contact/queryAll',
+        })
+      },
+    }
+
+    const senderModalProps = {
+      visible: senderModalVisible,
+      senderContacts,
+      handleChange (value) {
+        console.log(`selected ${value}`)
+      },
+      onOk (value) {
+        dispatch({
+          type: 'record/setCurrentItem',
+          payload: {
+            currentItem: {
+              recipient: value,
+            },
+          },
+        })
+
+        dispatch({
+          type: 'record/hideSenderModal',
+        })
+        // setFieldsValue('senderName', value.name)
+      },
+
+      onCancel () {
+        dispatch({
+          type: 'record/hideSenderModal',
+        })
+      },
+
+      getContacts () {
+        dispatch({
+          type: 'contact/queryAll',
+        })
+      },
+    }
+
+    const commentsModalProps = {
+      visible: modalVisible,
+      onOk (value) {
+        setFieldsValue({
+          remark: value,
+        })
+        dispatch({
+          type: 'record/hideModal',
+        })
+      },
+      onCancel () {
+        dispatch({
+          type: 'record/hideModal',
+        })
+      },
+    }
+
     return (
-      <Form layout="horizontal" onSubmit={this.handleSubmit}>
-        <FormItem hasFeedback label="收件人" {...formItemLayout}>
-          {
-            getFieldDecorator('recipientName', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入收件人姓名',
-                  whitespace: true,
-                },
-              ],
-            })(
-              <Input onClick={showRecipientModal} />
-            )
-          }
-        </FormItem>
-        <FormItem hasFeedback label="发件人" {...formItemLayout}>
-          {
-            getFieldDecorator('senderName', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入发件人信息',
-                  whitespace: true,
-                },
-              ],
-            })(
-              <Input href="#" onClick={showSenderModal} />
-            )
-          }
-        </FormItem>
-        <FormItem hasFeedback label="快递类型" {...formItemLayout}>
-          {
-            getFieldDecorator('expressType', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入快递类型',
-                  whitespace: true,
-                },
-              ],
-            })(
-              <Select defaultValue="normal" allowClear>
-                <Option value="normal">普通件</Option>
-                <Option value="payOnelivery">到付件</Option>
-                <Option value="Test">失效测试件</Option>
-                <Option value="insured">保价件</Option>
-              </Select>
-            )
-          }
-        </FormItem>
-        <FormItem hasFeedback label="物品类型" {...formItemLayout}>
-          {
-            getFieldDecorator('goodsType', {
-              rules: [
-                {
-                  required: true,
-                  whitespace: true,
-                  message: '请输入物品类型',
-                },
-              ],
-            })(
-              <Select defaultValue="file" allowClear>
-                <Option value="file">文件</Option>
-              </Select>
-            )
-          }
-        </FormItem>
-        <FormItem hasFeedback label="物品价值" {...formItemLayout}>
-          {
-            getFieldDecorator('goodsPrice', {
-              rules: [
-                {
-                  required: false,
-                  whitespace: true,
-                },
-              ],
-            })(<Input />)
-          }
-        </FormItem>
-        <FormItem hasFeedback label="报价费用" {...formItemLayout}>
-          {
-            getFieldDecorator('insurePrice', {
-              rules: [
-                {
-                  required: false,
-                  whitespace: true,
-                },
-              ],
-            })(<Input />)
-          }
-        </FormItem>
-        <FormItem hasFeedback label="发件站点" {...formItemLayout}>
-          {
-            getFieldDecorator('station', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入发件站点',
-                  whitespace: true,
-                },
-              ],
-            })(<Input />)
-          }
-        </FormItem>
-        <FormItem hasFeedback label="订单备注" {...formItemLayout}>
-          {
-            getFieldDecorator('remark', {
-              rules: [
-                {
-                  required: false,
-                  whitespace: true,
-                },
-              ],
-            })(<Input onClick={showCommentsModal} />)
-          }
-        </FormItem>
-        <FormItem hasFeedback style={{ fontSize: 'small' }}>
-          {
-            getFieldDecorator('agreement', {
-              rules: [
-                {
-                  validator: (rule, value, callback) => {
-                    if (value !== true) {
-                      callback('请同意协议并勾选')
-                    } else {
-                      callback()
-                    }
+      <div className="content-inner">
+        <Form layout="horizontal" onSubmit={this.handleSubmit}>
+          <FormItem hasFeedback label="收件人" {...formItemLayout}>
+            {
+              getFieldDecorator('recipientName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入收件人姓名',
+                    whitespace: true,
                   },
-                },
-              ],
-            })(
-              <Checkbox defaultChecked>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
-            )
-          }
-        </FormItem>
-        <FormItem>
-          <Button type="primary" htmlType="submit" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
-        </FormItem>
-      </Form>
+                ],
+              })(
+                <Input onClick={showRecipientModal} />
+              )
+            }
+          </FormItem>
+          <FormItem hasFeedback label="发件人" {...formItemLayout}>
+            {
+              getFieldDecorator('senderName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入发件人信息',
+                    whitespace: true,
+                  },
+                ],
+              })(
+                <Input href="#" onClick={showSenderModal} />
+              )
+            }
+          </FormItem>
+          <FormItem hasFeedback label="快递类型" {...formItemLayout}>
+            {
+              getFieldDecorator('expressType', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入快递类型',
+                    whitespace: true,
+                  },
+                ],
+              })(
+                <Select defaultValue="normal" allowClear>
+                  <Option value="normal">普通件</Option>
+                  <Option value="payOnelivery">到付件</Option>
+                  <Option value="Test">失效测试件</Option>
+                  <Option value="insured">保价件</Option>
+                </Select>
+              )
+            }
+          </FormItem>
+          <FormItem hasFeedback label="物品类型" {...formItemLayout}>
+            {
+              getFieldDecorator('goodsType', {
+                rules: [
+                  {
+                    required: true,
+                    whitespace: true,
+                    message: '请输入物品类型',
+                  },
+                ],
+              })(
+                <Select defaultValue="file" allowClear>
+                  <Option value="file">文件</Option>
+                </Select>
+              )
+            }
+          </FormItem>
+          <FormItem hasFeedback label="物品价值" {...formItemLayout}>
+            {
+              getFieldDecorator('goodsPrice', {
+                rules: [
+                  {
+                    required: false,
+                    whitespace: true,
+                  },
+                ],
+              })(<Input />)
+            }
+          </FormItem>
+          <FormItem hasFeedback label="报价费用" {...formItemLayout}>
+            {
+              getFieldDecorator('insurePrice', {
+                rules: [
+                  {
+                    required: false,
+                    whitespace: true,
+                  },
+                ],
+              })(<Input />)
+            }
+          </FormItem>
+          <FormItem hasFeedback label="发件站点" {...formItemLayout}>
+            {
+              getFieldDecorator('station', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入发件站点',
+                    whitespace: true,
+                  },
+                ],
+              })(<Input />)
+            }
+          </FormItem>
+          <FormItem hasFeedback label="订单备注" {...formItemLayout}>
+            {
+              getFieldDecorator('remark', {
+                rules: [
+                  {
+                    required: false,
+                    whitespace: true,
+                  },
+                ],
+              })(<Input onClick={showCommentsModal} />)
+            }
+          </FormItem>
+          <FormItem hasFeedback style={{ fontSize: 'small' }}>
+            {
+              getFieldDecorator('agreement', {
+                rules: [
+                  {
+                    validator: (rule, value, callback) => {
+                      if (value !== true) {
+                        callback('请同意协议并勾选')
+                      } else {
+                        callback()
+                      }
+                    },
+                  },
+                ],
+              })(
+                <Checkbox defaultChecked>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
+              )
+            }
+          </FormItem>
+          <FormItem>
+            <Button type="primary" htmlType="submit" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
+          </FormItem>
+        </Form>
+        <CommentsModal {...commentsModalProps} />
+        <SenderModal {...senderModalProps} />
+        <RecipientModal {...recipientModalProps} />
+      </div>
     )
   }
 }
@@ -200,6 +347,12 @@ OrderForm.propTypes = {
   record: PropTypes.object,
   contact: PropTypes.object,
   item: PropTypes.object,
+  commentsModalProps: PropTypes.object,
+  recipientModalVisible: PropTypes.object,
+  senderModalVisible: PropTypes.object,
+  modalVisible: PropTypes.object,
+  recipientContacts: PropTypes.object,
+  senderContacts: PropTypes.object,
 }
 export default Form.create()(OrderForm)
 

@@ -69,18 +69,15 @@ const fetch = (options) => {
     case 'post':
       return axios.post(url, {
         ...cloneData,
-        headers,
-      })
+      }, { headers })
     case 'put':
       return axios.put(url, {
         ...cloneData,
-        headers,
-      })
+      }, { headers })
     case 'patch':
       return axios.patch(url, {
         ...cloneData,
-        headers,
-      })
+      }, { headers })
     default:
       return axios(options)
   }
