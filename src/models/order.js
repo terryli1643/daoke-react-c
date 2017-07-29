@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 
-import * as recordService from '../services/record'
+import * as recordService from '../services/order'
 const { create, remove, query, recordFlow } = recordService
 import { pageModel } from './common'
 
@@ -90,8 +90,10 @@ export default modelExtend(pageModel, {
       }
     },
     *create ({ payload }, { call, put }) {
+      console.log('create')
       yield put({ type: 'hideModal' })
-      const data = yield call(create, payload)
+
+      const data = yield call(create, this.state.currentItem)
       if (data && data.success) {
         yield put({
           type: 'querySuccess',
@@ -173,6 +175,7 @@ export default modelExtend(pageModel, {
     },
 
     setCurrentItem (state, { payload }) {
+      console.log(payload)
       const { currentItem } = payload
       return { ...state, currentItem }
     },

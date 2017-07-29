@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Checkbox, Button } from 'antd'
+import { Form, Input, Select, Checkbox, Button, InputNumber } from 'antd'
 import CommentsModal from './CommentsModal'
 import SenderModal from './SenderModal'
 import RecipientModal from './RecipientModal'
@@ -15,15 +15,6 @@ const formItemLayout = {
 }
 
 class OrderForm extends React.Component {
-  constructor (props) {
-    super(props)
-    const {
-      currentItem,
-    } = props
-    this.state = {
-      currentItem,
-    }
-  }
 
   // componentWillMount = () => {
   //   const { currentItem } = this.props
@@ -44,24 +35,6 @@ class OrderForm extends React.Component {
     }
   }
 
-  handleSubmit = (e) => {
-    const { form: { validateFields, getFieldsValue, dispatch } } = this.props
-    e.preventDefault()
-    validateFields((errors) => {
-      if (errors) {
-        return
-      }
-      const data = {
-        ...getFieldsValue(),
-      }
-      // data.address = data.address.join(' ')
-      dispatch({
-        type: 'record/create',
-        payload: data,
-      })
-    })
-  }
-
   render () {
     const {
       modalVisible,
@@ -72,23 +45,54 @@ class OrderForm extends React.Component {
       showCommentsModal,
       showSenderModal,
       showRecipientModal,
-      form: { getFieldDecorator, setFieldsValue },
+      form: { getFieldDecorator, setFieldsValue, validateFields, getFieldsValue },
       dispatch,
     } = this.props
+
+    const handleSubmit = (e) => {
+      e.preventDefault()
+      validateFields((errors) => {
+        if (errors) {
+          return
+        }
+        const data = {
+          ...getFieldsValue(),
+        }
+
+        const payload = {
+          currentItem: {
+            remark: data.remark,
+            orderType: data.orderType,
+            payType: data.payType,
+            commodity: [{
+              goodsName: data.goodsName,
+              goodsquantity: data.goodsquantity,
+              goodsPrice: data.goodsPrice,
+              goodsWeight: data.goodsWeight,
+            }],
+          },
+        }
+
+        dispatch({
+          type: 'record/setCurrentItem',
+          payload,
+        })
+
+        dispatch({
+          type: 'record/create',
+        })
+      })
+    }
 
     const recipientModalProps = {
       visible: recipientModalVisible,
       recipientContacts,
-
-      handleChange (value) {
-        console.log(`selected ${value}`)
-      },
       onOk (value) {
         dispatch({
           type: 'record/setCurrentItem',
           payload: {
             currentItem: {
-              recipient: value,
+              receiver: value,
             },
           },
         })
@@ -126,9 +130,10 @@ class OrderForm extends React.Component {
         })
       },
 
-      getContacts () {
+      getContacts (payload) {
         dispatch({
           type: 'contact/queryAll',
+          payload,
         })
       },
     }
@@ -136,23 +141,41 @@ class OrderForm extends React.Component {
     const senderModalProps = {
       visible: senderModalVisible,
       senderContacts,
-      handleChange (value) {
-        console.log(`selected ${value}`)
-      },
       onOk (value) {
         dispatch({
           type: 'record/setCurrentItem',
           payload: {
             currentItem: {
-              recipient: value,
+              sender: value,
             },
           },
         })
 
+        if (value.sender.frequentlyAddress) {
+          const addressList = value.sender.region
+          const sender = value.sender
+          dispatch({
+            type: 'contact/create',
+            payload: {
+              address: sender.address,
+              province: addressList[0],
+              city: addressList[1],
+              district: addressList[2],
+              company: sender.company,
+              name: sender.name,
+              phone: sender.phone,
+              type: 1,
+            },
+          })
+        }
+
         dispatch({
           type: 'record/hideSenderModal',
         })
-        // setFieldsValue('senderName', value.name)
+
+        setFieldsValue({
+          senderName: value.sender.name,
+        })
       },
 
       onCancel () {
@@ -161,9 +184,10 @@ class OrderForm extends React.Component {
         })
       },
 
-      getContacts () {
+      getContacts (payload) {
         dispatch({
           type: 'contact/queryAll',
+          payload,
         })
       },
     }
@@ -187,7 +211,7 @@ class OrderForm extends React.Component {
 
     return (
       <div className="content-inner">
-        <Form layout="horizontal" onSubmit={this.handleSubmit}>
+        <Form layout="horizontal" onSubmit={handleSubmit}>
           <FormItem hasFeedback label="收件人" {...formItemLayout}>
             {
               getFieldDecorator('recipientName', {
@@ -220,7 +244,7 @@ class OrderForm extends React.Component {
           </FormItem>
           <FormItem hasFeedback label="快递类型" {...formItemLayout}>
             {
-              getFieldDecorator('expressType', {
+              getFieldDecorator('orderType', {
                 rules: [
                   {
                     required: true,
@@ -229,30 +253,40 @@ class OrderForm extends React.Component {
                   },
                 ],
               })(
-                <Select defaultValue="normal" allowClear>
-                  <Option value="normal">普通件</Option>
-                  <Option value="payOnelivery">到付件</Option>
-                  <Option value="Test">失效测试件</Option>
-                  <Option value="insured">保价件</Option>
+                <Select defaultValue="标准快递" allowClear>
+                  <Option value="标准快递">标准快递</Option>
+                  <Option value="到付件">到付件</Option>
+                  <Option value="代收货款">代收货款</Option>
+                  <Option value="保价快递">保价快递</Option>
                 </Select>
               )
             }
           </FormItem>
-          <FormItem hasFeedback label="物品类型" {...formItemLayout}>
+          <FormItem hasFeedback label="货物名称" {...formItemLayout}>
             {
-              getFieldDecorator('goodsType', {
+              getFieldDecorator('goodsName', {
                 rules: [
                   {
                     required: true,
                     whitespace: true,
-                    message: '请输入物品类型',
+                    message: '请输入货物名称',
                   },
                 ],
-              })(
-                <Select defaultValue="file" allowClear>
-                  <Option value="file">文件</Option>
-                </Select>
-              )
+              })(<Input />)
+            }
+          </FormItem>
+          <FormItem hasFeedback label="货物数量" {...formItemLayout}>
+            {
+              getFieldDecorator('goodsquantity', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入货物数量',
+                    type: 'number',
+                  },
+                ],
+                initialValue: 1,
+              })(<InputNumber />)
             }
           </FormItem>
           <FormItem hasFeedback label="物品价值" {...formItemLayout}>
@@ -261,11 +295,25 @@ class OrderForm extends React.Component {
                 rules: [
                   {
                     required: false,
-                    whitespace: true,
+                    type: 'number',
                   },
                 ],
-              })(<Input />)
-            }
+                initialValue: 1,
+              })(<InputNumber min={1} />)
+            }元
+          </FormItem>
+          <FormItem hasFeedback label="预估重量" {...formItemLayout}>
+            {
+              getFieldDecorator('goodsWeight', {
+                rules: [
+                  {
+                    required: false,
+                    type: 'number',
+                  },
+                ],
+                initialValue: 1,
+              })(<InputNumber />)
+            }公斤
           </FormItem>
           <FormItem hasFeedback label="报价费用" {...formItemLayout}>
             {
@@ -273,10 +321,31 @@ class OrderForm extends React.Component {
                 rules: [
                   {
                     required: false,
+                    type: 'number',
+                  },
+                ],
+                initialValue: 1,
+              })(<InputNumber min={1} />)
+            }元
+          </FormItem>
+          <FormItem hasFeedback label="支付类型" {...formItemLayout}>
+            {
+              getFieldDecorator('payType', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入支付类型',
                     whitespace: true,
                   },
                 ],
-              })(<Input />)
+              })(
+                <Select defaultValue="现付" allowClear>
+                  <Option value="未付钱">现付</Option>
+                  <Option value="到付">到付</Option>
+                  <Option value="月结">月结</Option>
+                  <Option value="未付钱">未付钱</Option>
+                </Select>
+              )
             }
           </FormItem>
           <FormItem hasFeedback label="发件站点" {...formItemLayout}>
@@ -316,15 +385,18 @@ class OrderForm extends React.Component {
                         callback()
                       }
                     },
+                    type: 'boolean',
                   },
                 ],
+                initialValue: true,
+                valuePropName: 'checked',
               })(
-                <Checkbox defaultChecked>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
+                <Checkbox>我已阅读并同意<a>《服务协议》</a><a>《禁限贵物品告知》</a></Checkbox>
               )
             }
           </FormItem>
           <FormItem>
-            <Button type="primary" htmlType="submit" size="large" style={{ width: '99%', marginTop: 10 }}>提交</Button>
+            <Button type="primary" size="large" onClick={handleSubmit} style={{ width: '99%', marginTop: 10 }}>提交</Button>
           </FormItem>
         </Form>
         <CommentsModal {...commentsModalProps} />
@@ -354,5 +426,5 @@ OrderForm.propTypes = {
   recipientContacts: PropTypes.object,
   senderContacts: PropTypes.object,
 }
-export default Form.create()(OrderForm)
+export default Form.create({})(OrderForm)
 

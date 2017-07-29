@@ -31,7 +31,7 @@ const Routers = function ({ history, app }) {
           path: 'record/send',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('./models/record'))
+              registerModel(app, require('./models/order'))
               registerModel(app, require('./models/contact'))
               cb(null, require('./routes/record/send'))
             }, 'record-send')
@@ -40,7 +40,7 @@ const Routers = function ({ history, app }) {
           path: 'record/query',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('./models/record'))
+              registerModel(app, require('./models/order'))
               cb(null, require('./routes/record/query'))
             }, 'record-query')
           },
@@ -48,7 +48,7 @@ const Routers = function ({ history, app }) {
           path: 'record/flow',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('./models/record'))
+              registerModel(app, require('./models/order'))
               cb(null, require('./routes/record/flow'))
             }, 'record-flow')
           },

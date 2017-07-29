@@ -19,6 +19,7 @@ export async function create (params) {
 }
 
 export async function recordFlow (params) {
+  console.log(params)
   return request({
     url: flow,
     method: 'get',

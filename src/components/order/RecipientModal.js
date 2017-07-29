@@ -14,10 +14,13 @@ const formItemLayout = {
   },
 }
 class RecipientModal extends React.Component {
+  state = {
+    disable: false,
+  }
 
   componentDidMount () {
     const { getContacts } = this.props
-    getContacts()
+    getContacts({ type: 0 })
   }
 
   render () {
@@ -28,12 +31,22 @@ class RecipientModal extends React.Component {
         getFieldDecorator,
         validateFields,
         getFieldsValue,
+        setFieldsValue,
+        resetFields,
       },
       recipientContacts,
-      handleChange,
       ...modalProps
     } = this.props
 
+    const handleChange = (index) => {
+      if (index === -1) {
+        resetFields()
+        this.setState({ disable: false })
+      } else {
+        setFieldsValue({ ...recipientContacts[index], frequentlyAddress: true })
+        this.setState({ disable: true })
+      }
+    }
     const handleOk = () => {
       validateFields((errors) => {
         if (errors) {
@@ -64,17 +77,20 @@ class RecipientModal extends React.Component {
         <Form layout="horizontal">
           <div className="ant-row ant-form-item">
             <Row>
-              <Col span={6} className="ant-form-item-label"><label>常用发件人</label></Col>
+              <Col span={6} className="ant-form-item-label"><label>常用收件人</label></Col>
               <Col span={14} className="ant-form-item-control">
                 <Select
                   size="large"
-                  placeholder="选择常用发件人"
+                  placeholder="选择常用收件人"
                   onChange={handleChange}
                 >
-                  {recipientContacts.map((contact) => {
+                  <Option value={-1}>
+                    添加联系人
+                  </Option>
+                  {recipientContacts.map((contact, index) => {
                     return (
-                      <Option value={contact.name}>
-                        {`${contact.name} - ${contact.phone}`}
+                      <Option value={index}>
+                        {contact.name}
                       </Option>)
                   })}
                 </Select>
@@ -89,7 +105,7 @@ class RecipientModal extends React.Component {
                   message: '请填写发件人姓名',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled={this.state.disable} />)}
           </FormItem>
           <FormItem label="电话" hasFeedback {...formItemLayout}>
             {getFieldDecorator('phone', {
@@ -102,7 +118,7 @@ class RecipientModal extends React.Component {
                   message: '请填写正确的联系电话',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled={this.state.disable} />)}
           </FormItem>
 
           <FormItem label="地址" hasFeedback {...formItemLayout}>
@@ -118,6 +134,7 @@ class RecipientModal extends React.Component {
               style={{ width: '100%' }}
               options={city}
               placeholder="选择"
+              disabled={this.state.disable}
             />)}
           </FormItem>
           <FormItem label="详细地址" hasFeedback {...formItemLayout}>
@@ -128,13 +145,13 @@ class RecipientModal extends React.Component {
                   message: '请填写详细地址',
                 },
               ],
-            })(<Input />)}
+            })(<Input disabled={this.state.disable} />)}
           </FormItem>
           <FormItem label="公司名称" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('company', {})(<Input />)}
+            {getFieldDecorator('company', {})(<Input disabled={this.state.disable} />)}
           </FormItem>
           <FormItem label="常用地址" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('frequentlyAddress', {})(<Checkbox />)}
+            {getFieldDecorator('frequentlyAddress', { valuePropName: 'checked' })(<Checkbox disabled={this.state.disable} />)}
           </FormItem>
         </Form>
       </Modal>
@@ -148,8 +165,7 @@ RecipientModal.propTypes = {
   item: PropTypes.object,
   onOk: PropTypes.func,
   recipientContacts: PropTypes.object,
-  handleChange: PropTypes.func,
   getContacts: PropTypes.func,
 }
 
-export default Form.create()(RecipientModal)
+export default Form.create({})(RecipientModal)
