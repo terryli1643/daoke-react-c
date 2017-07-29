@@ -3,7 +3,7 @@ const Mock = require('mockjs')
 const config = require('../utils/config')
 const { apiPrefix } = config
 
-let recordFlowData = Mock.mock({
+let orderFlowData = Mock.mock({
   'data|10': [
     {
       time: '@datetime',
@@ -16,7 +16,7 @@ let recordFlowData = Mock.mock({
   },
 })
 
-let recordListDate = Mock.mock({
+let orderListDate = Mock.mock({
   'data|80-100': [
     {
       'id|+1': 1,
@@ -40,7 +40,7 @@ let recordListDate = Mock.mock({
 
 module.exports = {
 
-  [`GET ${apiPrefix}/record/query`] (req, res) {
+  [`GET ${apiPrefix}/order/query`] (req, res) {
     const page = req.query
     const pageSize = page.pageSize || 10
     const currentPage = page.page || 1
@@ -48,7 +48,7 @@ module.exports = {
     let data
     let newPage
 
-    let newData = recordListDate.data.concat()
+    let newData = orderListDate.data.concat()
     if (page.keyword || page.timeRange) {
       const d = newData.filter((item) => {
         let result1 = item['senderName'].indexOf(decodeURI(page.keyword));
@@ -67,9 +67,9 @@ module.exports = {
         total: d.length,
       }
     } else {
-      data = recordListDate.data.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      recordListDate.page.current = currentPage * 1
-      newPage = recordListDate.page
+      data = orderListDate.data.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      orderListDate.page.current = currentPage * 1
+      newPage = orderListDate.page
     }
     res.json({
       success: true,
@@ -81,54 +81,54 @@ module.exports = {
     })
   },
 
-  [`POST ${apiPrefix}/record`] (req, res) {
+  [`POST ${apiPrefix}/order`] (req, res) {
     const newData = req.body
     newData.createTime = Mock.mock('@now')
     newData.avatar = Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', newData.nickName.substr(0, 1))
 
-    newData.id = recordListDate.data.length + 1
-    recordListDate.data.unshift(newData)
+    newData.id = orderListDate.data.length + 1
+    orderListDate.data.unshift(newData)
 
-    recordListDate.page.total = recordListDate.data.length
-    recordListDate.page.current = 1
+    orderListDate.page.total = orderListDate.data.length
+    orderListDate.page.current = 1
 
-    res.json({ success: true, data: recordListDate.data, page: recordListDate.page })
+    res.json({ success: true, data: orderListDate.data, page: orderListDate.page })
   },
 
-  [`DELETE ${apiPrefix}/record`] (req, res) {
+  [`DELETE ${apiPrefix}/order`] (req, res) {
     const deleteItem = req.body
 
-    recordListDate.data = recordListDate.data.filter((item) => {
+    orderListDate.data = orderListDate.data.filter((item) => {
       if (item.id === deleteItem.id) {
         return false
       }
       return true
     })
 
-    recordListDate.page.total = recordListDate.data.length
+    orderListDate.page.total = orderListDate.data.length
 
-    res.json({ success: true, data: recordListDate.data, page: recordListDate.page })
+    res.json({ success: true, data: orderListDate.data, page: orderListDate.page })
   },
 
-  [`PUT ${apiPrefix}/record`] (req, res) {
+  [`PUT ${apiPrefix}/order`] (req, res) {
     const editItem = req.body
 
     editItem.createTime = Mock.mock('@now')
     editItem.avatar = Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', editItem.nickName.substr(0, 1))
 
-    recordListDate.data = recordListDate.data.map((item) => {
+    orderListDate.data = orderListDate.data.map((item) => {
       if (item.id === editItem.id) {
         return editItem
       }
       return item
     })
 
-    res.json({ success: true, data: recordListDate.data, page: recordListDate.page })
+    res.json({ success: true, data: orderListDate.data, page: orderListDate.page })
   },
 
-  [`GET ${apiPrefix}/record-flow`] (req, res) {
+  [`GET ${apiPrefix}/order-flow`] (req, res) {
     const { number } = req.params
     console.log(number)
-    res.json({ success: true, data: recordFlowData.data, page: recordFlowData.page })
+    res.json({ success: true, data: orderFlowData.data, page: orderFlowData.page })
   },
 }

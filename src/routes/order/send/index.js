@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import OrderForm from '../../../components/order/Form'
 
-const Send = ({ record, contact, dispatch }) => {
-  const { currentItem, recipient, modalVisible, senderModalVisible, recipientModalVisible } = record
-  const { list } = contact
+const Send = ({ order, contact, dispatch }) => {
+  const { currentItem, modalType, modalVisible } = order
+  const { recipientContacts, senderContacts } = contact
 
   const commentsModalProps = {
     visible: modalVisible,
@@ -30,36 +30,14 @@ const Send = ({ record, contact, dispatch }) => {
     },
   }
 
-  const showCommentsModal = () => {
-    dispatch({
-      type: 'record/showModal',
-    })
-  }
-
-  const showRecipientModal = () => {
-    dispatch({
-      type: 'record/showRecipientModal',
-    })
-  }
-  const showSenderModal = () => {
-    dispatch({
-      type: 'record/showSenderModal',
-    })
-  }
-
   const formProps = {
-    senderModalVisible,
-    recipientModalVisible,
     commentsModalProps,
-    showCommentsModal,
-    showRecipientModal,
-    showSenderModal,
-    recipient,
     currentItem,
     dispatch,
     modalVisible,
-    recipientContacts: list,
-    senderContacts: list,
+    modalType,
+    recipientContacts,
+    senderContacts,
   }
 
   return (
@@ -70,8 +48,7 @@ const Send = ({ record, contact, dispatch }) => {
 Send.propTypes = {
   form: PropTypes.object,
   dispatch: PropTypes.func,
-  record: PropTypes.object,
+  order: PropTypes.object,
   contact: PropTypes.object,
-  item: PropTypes.object,
 }
-export default connect(({ record, contact }) => ({ record, contact }))(Send)
+export default connect(({ order, contact }) => ({ order, contact }))(Send)

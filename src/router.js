@@ -28,29 +28,29 @@ const Routers = function ({ history, app }) {
             }, 'homePage')
           },
         }, {
-          path: 'record/send',
+          path: 'order/send',
           getComponent (nextState, cb) {
             require.ensure([], require => {
               registerModel(app, require('./models/order'))
               registerModel(app, require('./models/contact'))
-              cb(null, require('./routes/record/send'))
-            }, 'record-send')
+              cb(null, require('./routes/order/send'))
+            }, 'order-send')
           },
         }, {
-          path: 'record/query',
+          path: 'order/query',
           getComponent (nextState, cb) {
             require.ensure([], require => {
               registerModel(app, require('./models/order'))
-              cb(null, require('./routes/record/query'))
-            }, 'record-query')
+              cb(null, require('./routes/order/query'))
+            }, 'order-query')
           },
         }, {
-          path: 'record/flow',
+          path: 'order/flow',
           getComponent (nextState, cb) {
             require.ensure([], require => {
               registerModel(app, require('./models/order'))
-              cb(null, require('./routes/record/flow'))
-            }, 'record-flow')
+              cb(null, require('./routes/order/flow'))
+            }, 'order-flow')
           },
         }, {
           path: 'dashboard',

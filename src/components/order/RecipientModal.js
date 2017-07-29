@@ -38,7 +38,6 @@ class RecipientModal extends React.Component {
       recipientContacts,
       ...modalProps
     } = this.props
-
     const handleChange = (index) => {
       if (index === -1) {
         resetFields()

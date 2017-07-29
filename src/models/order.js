@@ -1,20 +1,17 @@
 import modelExtend from 'dva-model-extend'
-
-import * as recordService from '../services/order'
-const { create, remove, query, recordFlow } = recordService
+import * as orderService from '../services/order'
+const { create, query, recordFlow } = orderService
 import { pageModel } from './common'
 
 export default modelExtend(pageModel, {
-  namespace: 'record',
+  namespace: 'order',
 
   state: {
     list: [],
     flowData: [],
     currentItem: {},
     modalVisible: false,
-    senderModalVisible: false,
-    recipientModalVisible: false,
-    modalType: 'create',
+    modalType: '',
     isMotion: false,
     pagination: {
       showSizeChanger: true,
@@ -57,43 +54,11 @@ export default modelExtend(pageModel, {
         })
       }
     },
-
-    *setRecipient ({ payload }, { call, put }) {
-      const data = yield call(remove, { id: payload })
-      if (data && data.success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: data.data,
-            pagination: {
-              total: data.page.total,
-              current: data.page.current,
-            },
-          },
-        })
-      }
-    },
-
-    *'delete' ({ payload }, { call, put }) {
-      const data = yield call(remove, { id: payload })
-      if (data && data.success) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: data.data,
-            pagination: {
-              total: data.page.total,
-              current: data.page.current,
-            },
-          },
-        })
-      }
-    },
-    *create ({ payload }, { call, put }) {
-      console.log('create')
+    *'create' ({ payload }, { call, put }) {
       yield put({ type: 'hideModal' })
 
       const data = yield call(create, this.state.currentItem)
+      console.log(data)
       if (data && data.success) {
         yield put({
           type: 'querySuccess',
@@ -107,7 +72,6 @@ export default modelExtend(pageModel, {
         })
       }
     },
-
     *'recordFlow' ({ payload }, { call, put }) {
       const data = yield call(recordFlow, payload)
       if (data && data.success) {
@@ -161,21 +125,7 @@ export default modelExtend(pageModel, {
       return { ...state, modalVisible: false }
     },
 
-    showSenderModal (state, action) {
-      return { ...state, ...action.payload, senderModalVisible: true }
-    },
-    hideSenderModal (state) {
-      return { ...state, senderModalVisible: false }
-    },
-    showRecipientModal (state, action) {
-      return { ...state, ...action.payload, recipientModalVisible: true }
-    },
-    hideRecipientModal (state) {
-      return { ...state, recipientModalVisible: false }
-    },
-
     setCurrentItem (state, { payload }) {
-      console.log(payload)
       const { currentItem } = payload
       return { ...state, currentItem }
     },

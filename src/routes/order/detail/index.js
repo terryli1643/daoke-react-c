@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import styles from './index.less'
 
-const Detail = ({ recordDetail }) => {
-  const { data } = recordDetail
+const Detail = ({ orderDetail }) => {
+  const { data } = orderDetail
   const content = []
   for (let key in data) {
     if ({}.hasOwnProperty.call(data, key)) {
@@ -22,8 +22,8 @@ const Detail = ({ recordDetail }) => {
 }
 
 Detail.propTypes = {
-  recordDetail: PropTypes.object,
+  orderDetail: PropTypes.object,
   loading: PropTypes.bool,
 }
 
-export default connect(({ recordDetail, loading }) => ({ recordDetail, loading: loading.models.recordDetail }))(Detail)
+export default connect(({ orderDetail, loading }) => ({ orderDetail, loading: loading.models.orderDetail }))(Detail)

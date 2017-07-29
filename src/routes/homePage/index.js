@@ -16,7 +16,7 @@ const HomePage = () => {
         <Row gutter={48}>
           <Col span={8}>
             <div style={{ margin: '20px 0' }}>
-              <a href="/record/send">
+              <a href="/order/send">
                 <Icon type="export" style={{ fontSize: 50, width: '90px', height: '90px' }}>
                   <div style={{ fontSize: 13, margin: '20px 0' }}>我要发货</div>
                 </Icon>
@@ -25,7 +25,7 @@ const HomePage = () => {
           </Col>
           <Col span={8}>
             <div style={{ margin: '20px 0' }}>
-              <a href="/record/flow">
+              <a href="/order/flow">
                 <Icon type="search" style={{ fontSize: 50, width: '90px', height: '90px' }}>
                   <div style={{ fontSize: 13, margin: '20px 0' }}>单号查询</div>
                 </Icon>
@@ -34,7 +34,7 @@ const HomePage = () => {
           </Col>
           <Col span={8}>
             <div style={{ margin: '20px 0' }}>
-              <a href="/record/query">
+              <a href="/order/query">
                 <Icon type="solution" style={{ fontSize: 50, width: '90px', height: '90px' }}>
                   <div style={{ fontSize: 13, margin: '20px 0' }}>发件记录</div>
                 </Icon>

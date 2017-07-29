@@ -38,16 +38,38 @@ class OrderForm extends React.Component {
   render () {
     const {
       modalVisible,
-      recipientModalVisible,
-      senderModalVisible,
+      modalType,
       recipientContacts,
       senderContacts,
-      showCommentsModal,
-      showSenderModal,
-      showRecipientModal,
       form: { getFieldDecorator, setFieldsValue, validateFields, getFieldsValue },
       dispatch,
     } = this.props
+
+    const showCommentsModal = () => {
+      dispatch({
+        type: 'order/showModal',
+        payload: {
+          modalType: 'commentsModal',
+        },
+      })
+    }
+
+    const showRecipientModal = () => {
+      dispatch({
+        type: 'order/showModal',
+        payload: {
+          modalType: 'recipientModal',
+        },
+      })
+    }
+    const showSenderModal = () => {
+      dispatch({
+        type: 'order/showModal',
+        payload: {
+          modalType: 'senderModal',
+        },
+      })
+    }
 
     const handleSubmit = (e) => {
       e.preventDefault()
@@ -74,22 +96,23 @@ class OrderForm extends React.Component {
         }
 
         dispatch({
-          type: 'record/setCurrentItem',
+          type: 'order/setCurrentItem',
           payload,
         })
 
         dispatch({
-          type: 'record/create',
+          type: 'order/create',
+          payload,
         })
       })
     }
 
     const recipientModalProps = {
-      visible: recipientModalVisible,
+      visible: modalVisible,
       recipientContacts,
       onOk (value) {
         dispatch({
-          type: 'record/setCurrentItem',
+          type: 'order/setCurrentItem',
           payload: {
             currentItem: {
               receiver: value,
@@ -116,7 +139,7 @@ class OrderForm extends React.Component {
         }
 
         dispatch({
-          type: 'record/hideRecipientModal',
+          type: 'order/hideModal',
         })
 
         setFieldsValue({
@@ -126,7 +149,7 @@ class OrderForm extends React.Component {
 
       onCancel () {
         dispatch({
-          type: 'record/hideRecipientModal',
+          type: 'order/hideModal',
         })
       },
 
@@ -139,11 +162,11 @@ class OrderForm extends React.Component {
     }
 
     const senderModalProps = {
-      visible: senderModalVisible,
+      visible: modalVisible,
       senderContacts,
       onOk (value, createNew) {
         dispatch({
-          type: 'record/setCurrentItem',
+          type: 'order/setCurrentItem',
           payload: {
             currentItem: {
               sender: value,
@@ -170,7 +193,7 @@ class OrderForm extends React.Component {
         }
 
         dispatch({
-          type: 'record/hideSenderModal',
+          type: 'order/hideModal',
         })
 
         setFieldsValue({
@@ -180,7 +203,7 @@ class OrderForm extends React.Component {
 
       onCancel () {
         dispatch({
-          type: 'record/hideSenderModal',
+          type: 'order/hideModal',
         })
       },
 
@@ -199,12 +222,12 @@ class OrderForm extends React.Component {
           remark: value,
         })
         dispatch({
-          type: 'record/hideModal',
+          type: 'order/hideModal',
         })
       },
       onCancel () {
         dispatch({
-          type: 'record/hideModal',
+          type: 'order/hideModal',
         })
       },
     }
@@ -401,30 +424,21 @@ class OrderForm extends React.Component {
             <Button type="primary" size="large" onClick={handleSubmit} style={{ width: '99%', marginTop: 10 }}>提交</Button>
           </FormItem>
         </Form>
-        <CommentsModal {...commentsModalProps} />
-        <SenderModal {...senderModalProps} />
-        <RecipientModal {...recipientModalProps} />
+        {modalVisible && modalType === 'commentsModal' && <CommentsModal {...commentsModalProps} />}
+        {modalVisible && modalType === 'senderModal' && <SenderModal {...senderModalProps} />}
+        {modalVisible && modalType === 'recipientModal' && <RecipientModal {...recipientModalProps} />}
       </div>
     )
   }
 }
 
 OrderForm.propTypes = {
-  recipient: PropTypes.object,
   currentItem: PropTypes.object,
-  showCommentsModal: PropTypes.func,
-  showSenderModal: PropTypes.func,
-  showRecipientModal: PropTypes.func,
-  handleSubmit: PropTypes.func,
   form: PropTypes.object,
   dispatch: PropTypes.func,
-  record: PropTypes.object,
   contact: PropTypes.object,
-  item: PropTypes.object,
-  commentsModalProps: PropTypes.object,
-  recipientModalVisible: PropTypes.object,
-  senderModalVisible: PropTypes.object,
   modalVisible: PropTypes.object,
+  modalType: PropTypes.object,
   recipientContacts: PropTypes.object,
   senderContacts: PropTypes.object,
 }

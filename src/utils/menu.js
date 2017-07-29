@@ -163,7 +163,7 @@ module.exports = [
     mpid: 1,
     name: '发快递',
     icon: 'api',
-    router: '/record/send',
+    router: '/order/send',
   },
   {
     id: 12,
@@ -171,7 +171,7 @@ module.exports = [
     mpid: 1,
     name: '查询快递',
     icon: 'api',
-    router: '/record/query',
+    router: '/order/query',
   },
   {
     id: 13,
@@ -179,6 +179,6 @@ module.exports = [
     mpid: 1,
     name: '单号查询',
     icon: 'api',
-    router: '/record/flow',
+    router: '/order/flow',
   },
 ]

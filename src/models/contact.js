@@ -3,34 +3,30 @@ import modelExtend from 'dva-model-extend'
 import * as contactService from '../services/contact'
 import { pageModel } from './common'
 
-const { query, create, remove, update, queryAll } = contactService
+const { create, remove, update, queryAll } = contactService
 
 export default modelExtend(pageModel, {
   namespace: 'contact',
 
   state: {
-    list: [],
+    recipientContacts: [{
+      name: 'lizhen',
+      phone: '18113039957',
+      region: ['四川省', '成都市', '武侯区'],
+      address: '华阳麓山大道',
+      company: 'ffdsafdsa',
+    }],
+    senderContacts: [{
+      name: 'lizhen2',
+      phone: '18113039927',
+      region: ['四川省', '成都市', '武侯区'],
+      address: '华阳麓山大道22',
+      company: 'ffdsafdsa2',
+    }],
     currentItem: {},
   },
 
   effects: {
-
-    *query ({ payload = {} }, { call, put }) {
-      const data = yield call(query, payload)
-      if (data) {
-        yield put({
-          type: 'querySuccess',
-          payload: {
-            list: data.data,
-            pagination: {
-              current: Number(payload.page) || 1,
-              pageSize: Number(payload.pageSize) || 10,
-              total: data.total,
-            },
-          },
-        })
-      }
-    },
 
     *'delete' ({ payload }, { call, put, select }) {
       const data = yield call(remove, { id: payload })
@@ -66,9 +62,9 @@ export default modelExtend(pageModel, {
     },
 
     *queryAll ({ payload }, { call, put }) {
-      const data = yield call(queryAll)
+      const data = yield call(queryAll, payload)
       if (data.success) {
-        yield put({ type: 'querySuccess' })
+        yield put({ type: 'querySuccess', payload: { ...data, contactType: payload.type } })
       } else {
         throw data
       }
@@ -76,10 +72,22 @@ export default modelExtend(pageModel, {
   },
 
   reducers: {
-    querySuccess (state, { payload: contact }) {
+    querySuccess (state, { payload: { contact, contactType } }) {
+      if (contactType === 0 && contact) {
+        return {
+          ...state,
+          recipientContacts: contact,
+        }
+      }
+      if (contact) {
+        return {
+          ...state,
+          senderContacts: contact,
+        }
+      }
+
       return {
         ...state,
-        contact,
       }
     },
   },
