@@ -25,7 +25,7 @@ const HomePage = () => {
           </Col>
           <Col span={8}>
             <div style={{ margin: '20px 0' }}>
-              <a href="/order/flow">
+              <a href="/express/tracing">
                 <Icon type="search" style={{ fontSize: 50, width: '90px', height: '90px' }}>
                   <div style={{ fontSize: 13, margin: '20px 0' }}>单号查询</div>
                 </Icon>

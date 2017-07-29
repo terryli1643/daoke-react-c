@@ -4,45 +4,40 @@ import { connect } from 'dva'
 import List from './List'
 import Filter from './Filter'
 
-const Flow = ({ location, dispatch, record }) => {
-  const { flowData, isMotion } = record
+const Express = ({ location, dispatch, express }) => {
+  const { list } = express
 
   const filterProps = {
-    isMotion,
     filter: {
       ...location.query,
     },
     onSearch (value) {
       dispatch({
-        type: 'record/recordFlow',
+        type: 'express/tracing',
         payload: {
-          ...value,
+          value,
         },
       })
-    },
-    switchIsMotion () {
-      dispatch({ type: 'record/switchIsMotion' })
     },
   }
 
   const listProps = {
-    flowData,
+    list,
   }
 
   return (
     <div className="content-inner">
       <Filter {...filterProps} />
-      {flowData.length > 0 && <List {...listProps} />}
+      {list.length > 0 && <List {...listProps} />}
     </div>
   )
 }
 
-Flow.propTypes = {
-  record: PropTypes.object,
+Express.propTypes = {
+  express: PropTypes.object,
   location: PropTypes.object,
   dispatch: PropTypes.func,
   loading: PropTypes.object,
-  activeTabKey: PropTypes.object,
 }
 
-export default connect(({ record, loading }) => ({ record, loading }))(Flow)
+export default connect(({ express, loading }) => ({ express, loading }))(Express)

@@ -45,12 +45,12 @@ const Routers = function ({ history, app }) {
             }, 'order-query')
           },
         }, {
-          path: 'order/flow',
+          path: 'express/tracing',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              registerModel(app, require('./models/order'))
-              cb(null, require('./routes/order/flow'))
-            }, 'order-flow')
+              registerModel(app, require('./models/express'))
+              cb(null, require('./routes/express'))
+            }, 'expressTracing')
           },
         }, {
           path: 'dashboard',

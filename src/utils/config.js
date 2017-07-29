@@ -20,8 +20,8 @@ module.exports = {
     dashboard: '/dashboard',
     orders: '/api/v1/orders',
     order: '/api/v1/order',
-    flow: '/api/v1/record-flow',
     contact: '/api/v1/contactinfo',
     contacts: '/api/v1/contactinfos',
+    expressTracing: '/api/v1/express/tracing',
   },
 }
