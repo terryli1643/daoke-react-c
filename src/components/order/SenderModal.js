@@ -61,9 +61,7 @@ class SenderModal extends React.Component {
         }
         // data.address = data.address.join(' ')
         const payload = {
-          sender: {
-            ...data,
-          },
+          ...data,
         }
         onOk(payload, this.state.createNew)
       })

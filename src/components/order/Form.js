@@ -41,6 +41,7 @@ class OrderForm extends React.Component {
       modalType,
       recipientContacts,
       senderContacts,
+      currentItem,
       form: { getFieldDecorator, setFieldsValue, validateFields, getFieldsValue },
       dispatch,
     } = this.props
@@ -83,6 +84,7 @@ class OrderForm extends React.Component {
 
         const payload = {
           currentItem: {
+            ...currentItem,
             remark: data.remark,
             orderType: data.orderType,
             payType: data.payType,
@@ -92,6 +94,8 @@ class OrderForm extends React.Component {
               goodsPrice: data.goodsPrice,
               goodsWeight: data.goodsWeight,
             }],
+            // receiver: currentItem.receiver,
+            // sender: currentItem.sender,
           },
         }
 
@@ -110,17 +114,18 @@ class OrderForm extends React.Component {
     const recipientModalProps = {
       visible: modalVisible,
       recipientContacts,
-      onOk (value) {
+      onOk (value, createNew) {
         dispatch({
           type: 'order/setCurrentItem',
           payload: {
             currentItem: {
+              ...currentItem,
               receiver: value,
             },
           },
         })
 
-        if (value.createNew) {
+        if (createNew) {
           const addressList = value.recipient.region
           const recipient = value.recipient
           dispatch({
@@ -143,7 +148,7 @@ class OrderForm extends React.Component {
         })
 
         setFieldsValue({
-          recipientName: value.recipient.name,
+          recipientName: value.name,
         })
       },
 
@@ -169,6 +174,7 @@ class OrderForm extends React.Component {
           type: 'order/setCurrentItem',
           payload: {
             currentItem: {
+              ...currentItem,
               sender: value,
             },
           },
@@ -197,7 +203,7 @@ class OrderForm extends React.Component {
         })
 
         setFieldsValue({
-          senderName: value.sender.name,
+          senderName: value.name,
         })
       },
 
@@ -438,7 +444,7 @@ OrderForm.propTypes = {
   dispatch: PropTypes.func,
   contact: PropTypes.object,
   modalVisible: PropTypes.object,
-  modalType: PropTypes.object,
+  modalType: PropTypes.string,
   recipientContacts: PropTypes.object,
   senderContacts: PropTypes.object,
 }

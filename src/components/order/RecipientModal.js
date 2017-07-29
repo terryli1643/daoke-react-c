@@ -58,9 +58,7 @@ class RecipientModal extends React.Component {
         }
         // data.address = data.address.join(' ')
         const payload = {
-          recipient: {
-            ...data,
-          },
+          ...data,
         }
         onOk(payload, this.state.createNew)
       })
