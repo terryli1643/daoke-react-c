@@ -1,6 +1,6 @@
 import modelExtend from 'dva-model-extend'
 import * as orderService from '../services/order'
-const { query, recordFlow } = orderService
+const { query, create, orderFlow } = orderService
 import { pageModel } from './common'
 
 export default modelExtend(pageModel, {
@@ -54,26 +54,27 @@ export default modelExtend(pageModel, {
         })
       }
     },
-    *'create' ({ payload }, { put }) {
+    *'create' ({ payload }, { select, call, put }) {
       yield put({ type: 'hideModal' })
-      console.log(payload)
-      // const data = yield call(create, this.state.currentItem)
-      // console.log(data)
-      // if (data && data.success) {
-      //   yield put({
-      //     type: 'querySuccess',
-      //     payload: {
-      //       list: data.data,
-      //       pagination: {
-      //         total: data.page.total,
-      //         current: data.page.current,
-      //       },
-      //     },
-      //   })
-      // }
+      const currentItem = yield select(({ order }) => order.currentItem)
+      console.log(currentItem)
+      const data = yield call(create, currentItem)
+      console.log(data)
+      if (data && data.success) {
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: data.data,
+            pagination: {
+              total: data.page.total,
+              current: data.page.current,
+            },
+          },
+        })
+      }
     },
-    *'recordFlow' ({ payload }, { call, put }) {
-      const data = yield call(recordFlow, payload)
+    *'orderFlow' ({ payload }, { call, put }) {
+      const data = yield call(orderFlow, payload)
       if (data && data.success) {
         yield put({
           type: 'recordFlowSuccess',

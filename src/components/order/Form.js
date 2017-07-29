@@ -94,8 +94,6 @@ class OrderForm extends React.Component {
               goodsPrice: data.goodsPrice,
               goodsWeight: data.goodsWeight,
             }],
-            // receiver: currentItem.receiver,
-            // sender: currentItem.sender,
           },
         }
 
