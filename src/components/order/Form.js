@@ -97,7 +97,7 @@ class OrderForm extends React.Component {
           },
         })
 
-        if (value.recipient.frequentlyAddress) {
+        if (value.createNew) {
           const addressList = value.recipient.region
           const recipient = value.recipient
           dispatch({
@@ -141,7 +141,7 @@ class OrderForm extends React.Component {
     const senderModalProps = {
       visible: senderModalVisible,
       senderContacts,
-      onOk (value) {
+      onOk (value, createNew) {
         dispatch({
           type: 'record/setCurrentItem',
           payload: {
@@ -151,7 +151,7 @@ class OrderForm extends React.Component {
           },
         })
 
-        if (value.sender.frequentlyAddress) {
+        if (createNew) {
           const addressList = value.sender.region
           const sender = value.sender
           dispatch({
@@ -252,8 +252,9 @@ class OrderForm extends React.Component {
                     whitespace: true,
                   },
                 ],
+                initialValue: '标准快递',
               })(
-                <Select defaultValue="标准快递" allowClear>
+                <Select>
                   <Option value="标准快递">标准快递</Option>
                   <Option value="到付件">到付件</Option>
                   <Option value="代收货款">代收货款</Option>
@@ -286,7 +287,7 @@ class OrderForm extends React.Component {
                   },
                 ],
                 initialValue: 1,
-              })(<InputNumber />)
+              })(<InputNumber min={1} />)
             }
           </FormItem>
           <FormItem hasFeedback label="物品价值" {...formItemLayout}>
@@ -312,7 +313,7 @@ class OrderForm extends React.Component {
                   },
                 ],
                 initialValue: 1,
-              })(<InputNumber />)
+              })(<InputNumber min={0.5} step={0.5} />)
             }公斤
           </FormItem>
           <FormItem hasFeedback label="报价费用" {...formItemLayout}>
@@ -324,8 +325,8 @@ class OrderForm extends React.Component {
                     type: 'number',
                   },
                 ],
-                initialValue: 1,
-              })(<InputNumber min={1} />)
+                initialValue: 0,
+              })(<InputNumber min={0} />)
             }元
           </FormItem>
           <FormItem hasFeedback label="支付类型" {...formItemLayout}>
@@ -338,8 +339,9 @@ class OrderForm extends React.Component {
                     whitespace: true,
                   },
                 ],
+                initialValue: '现付',
               })(
-                <Select defaultValue="现付" allowClear>
+                <Select>
                   <Option value="未付钱">现付</Option>
                   <Option value="到付">到付</Option>
                   <Option value="月结">月结</Option>

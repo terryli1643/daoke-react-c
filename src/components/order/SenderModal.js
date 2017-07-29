@@ -17,6 +17,7 @@ class SenderModal extends React.Component {
 
   state = {
     disable: false,
+    createNew: false,
   }
 
   componentDidMount () {
@@ -42,10 +43,10 @@ class SenderModal extends React.Component {
     const handleChange = (index) => {
       if (index === -1) {
         resetFields()
-        this.setState({ disable: false })
+        this.setState({ disable: false, createNew: true })
       } else {
         setFieldsValue({ ...senderContacts[index], frequentlyAddress: true })
-        this.setState({ disable: true })
+        this.setState({ disable: true, createNew: false })
       }
     }
 
@@ -64,7 +65,7 @@ class SenderModal extends React.Component {
             ...data,
           },
         }
-        onOk(payload)
+        onOk(payload, this.state.createNew)
       })
     }
 
