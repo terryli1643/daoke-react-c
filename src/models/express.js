@@ -36,7 +36,6 @@ export default modelExtend(pageModel, {
 
   reducers: {
     tracingSuccess (state, action) {
-      console.log(action)
       return { ...state, ...action.payload }
     },
 

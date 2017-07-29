@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Timeline, Icon } from 'antd'
+import { Timeline, Icon, Spin } from 'antd'
 
-const List = ({ list }) => {
+const List = ({ list, loading }) => {
   const action = []
 
   list.forEach((item, index) => {
@@ -17,6 +17,7 @@ const List = ({ list }) => {
       <Timeline>
         {action}
       </Timeline>
+      {loading && <Spin />}
     </div>
   )
 }
@@ -24,6 +25,7 @@ const List = ({ list }) => {
 List.propTypes = {
   location: PropTypes.object,
   list: PropTypes.object,
+  loading: PropTypes.object,
 }
 
 export default List

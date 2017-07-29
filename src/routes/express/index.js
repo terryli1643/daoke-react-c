@@ -4,9 +4,8 @@ import { connect } from 'dva'
 import List from './List'
 import Filter from './Filter'
 
-const Express = ({ location, dispatch, express }) => {
+const Express = ({ location, dispatch, express, loading }) => {
   const { list } = express
-
   const filterProps = {
     filter: {
       ...location.query,
@@ -22,13 +21,14 @@ const Express = ({ location, dispatch, express }) => {
   }
 
   const listProps = {
+    loading: loading.effects['express/tracing'],
     list,
   }
 
   return (
     <div className="content-inner">
       <Filter {...filterProps} />
-      {list.length > 0 && <List {...listProps} />}
+      {<List {...listProps} />}
     </div>
   )
 }

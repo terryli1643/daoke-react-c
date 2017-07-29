@@ -14,7 +14,6 @@ const Query = ({ location, dispatch, order, loading }) => {
     loading: loading.effects['order/query'],
     pagination,
     location,
-    isMotion,
     onChange (page) {
       const { query, pathname } = location
       dispatch(routerRedux.push({
@@ -55,9 +54,6 @@ const Query = ({ location, dispatch, order, loading }) => {
         })) : dispatch(routerRedux.push({
           pathname: '/order',
         }))
-    },
-    switchIsMotion () {
-      dispatch({ type: 'order/switchIsMotion' })
     },
   }
 
