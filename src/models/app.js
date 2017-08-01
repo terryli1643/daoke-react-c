@@ -19,7 +19,7 @@ export default {
     setup ({ dispatch, history }) {
       // dispatch({ type: 'query' })
       history.listen(location => {
-        if (location.pathname === '/record/query' || location.pathname === '/account' || location.pathname === '/record/send') {
+        if (location.pathname === '/order/query' || location.pathname === '/account') {
           dispatch({
             type: 'query',
             payload: location.query,

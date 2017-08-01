@@ -7,7 +7,8 @@ import Menus from './Menu'
 const SubMenu = Menu.SubMenu
 
 const Header = ({ user, logout, switchSider, siderFold, isNavbar, menuPopoverVisible, location, switchMenuPopover, navOpenKeys, changeOpenKeys, menu }) => {
-  let handleClickMenu = e => e.key === 'logout' && logout()
+  let handleLogout = e => e.key === 'logout' && logout()
+
   const menusProps = {
     menu,
     siderFold: false,
@@ -17,6 +18,27 @@ const Header = ({ user, logout, switchSider, siderFold, isNavbar, menuPopoverVis
     location,
     navOpenKeys,
     changeOpenKeys,
+  }
+  const menuProps = () => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      return (<Menu mode="horizontal" onClick={handleLogout}>
+        <SubMenu style={{
+          float: 'right',
+        }} title={< span > <Icon type="user" />
+          {user.username} </span>}
+        >
+          <Menu.Item key="logout">
+            退出登录
+          </Menu.Item>
+        </SubMenu>
+      </Menu>)
+    }
+    return (<Menu mode="horizontal">
+      <Menu.Item key="logout">
+        <a href="/login">登录</a>
+      </Menu.Item>
+    </Menu>)
   }
   return (
     <div className={styles.header}>
@@ -30,20 +52,7 @@ const Header = ({ user, logout, switchSider, siderFold, isNavbar, menuPopoverVis
           <Icon type={siderFold ? 'menu-unfold' : 'menu-fold'} />
         </div>}
       <div className={styles.rightWarpper}>
-        <div className={styles.button}>
-          <Icon type="mail" />
-        </div>
-        <Menu mode="horizontal" onClick={handleClickMenu}>
-          <SubMenu style={{
-            float: 'right',
-          }} title={< span > <Icon type="user" />
-            {user.username} </span>}
-          >
-            <Menu.Item key="logout">
-              Sign out
-            </Menu.Item>
-          </SubMenu>
-        </Menu>
+        {menuProps()}
       </div>
     </div>
   )
