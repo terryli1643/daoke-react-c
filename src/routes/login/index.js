@@ -32,6 +32,7 @@ const Login = ({
         <img alt={'logo'} src={config.logo} />
         <span>{config.name}</span>
       </div>
+
       <form>
         <FormItem hasFeedback>
           {getFieldDecorator('login', {
@@ -58,8 +59,7 @@ const Login = ({
             登录
           </Button>
           <p>
-            <span>Username：guest</span>
-            <span>Password：guest</span>
+            <a href="/home">进入首页</a>
           </p>
         </Row>
 

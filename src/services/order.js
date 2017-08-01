@@ -14,6 +14,6 @@ export async function create (params) {
   return request({
     url: order,
     method: 'post',
-    data: params,
+    data: { ...params, sendSiteTraceChain: '123456001001', expressTypeCode: 'YD' },
   })
 }

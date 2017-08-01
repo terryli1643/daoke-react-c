@@ -21,8 +21,11 @@ class SenderModal extends React.Component {
   }
 
   componentDidMount () {
-    const { getContacts } = this.props
-    getContacts({ type: 1 })
+    const token = localStorage.getItem('token')
+    if (token) {
+      const { getContacts } = this.props
+      getContacts({ type: 1 })
+    }
   }
 
   render () {
@@ -71,12 +74,12 @@ class SenderModal extends React.Component {
       ...modalProps,
       onOk: handleOk,
     }
-
+    const token = localStorage.getItem('token')
     return (
       <Modal {...modalOpts}>
         <h2>发件人信息</h2>
         <Form layout="horizontal">
-          <div className="ant-row ant-form-item">
+          {token && <div className="ant-row ant-form-item">
             <Row>
               <Col span={6} className="ant-form-item-label"><label>常用发件人</label></Col>
               <Col span={14} className="ant-form-item-control">
@@ -98,6 +101,7 @@ class SenderModal extends React.Component {
               </Col>
             </Row>
           </div>
+          }
           <FormItem label="姓名" hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
               rules: [
@@ -151,9 +155,11 @@ class SenderModal extends React.Component {
           <FormItem label="公司名称" hasFeedback {...formItemLayout}>
             {getFieldDecorator('company', {})(<Input disabled={this.state.disable} />)}
           </FormItem>
-          <FormItem label="常用地址" hasFeedback {...formItemLayout}>
-            {getFieldDecorator('frequentlyAddress', { valuePropName: 'checked' })(<Checkbox disabled={this.state.disable} />)}
-          </FormItem>
+          {
+            token && <FormItem label="常用地址" hasFeedback {...formItemLayout}>
+              {getFieldDecorator('frequentlyAddress', { valuePropName: 'checked' })(<Checkbox disabled={this.state.disable} />)}
+            </FormItem>
+          }
         </Form>
       </Modal>
     )

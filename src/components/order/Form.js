@@ -16,25 +16,6 @@ const formItemLayout = {
 
 class OrderForm extends React.Component {
 
-  // componentWillMount = () => {
-  //   const { currentItem } = this.props
-  //   this.setFields(currentItem)
-  // }
-  //
-  // setFields = (recipient, currentItem) => {
-  //   const { form: { setFieldsValue } } = this.props
-  //   // setFieldsValue('recipientName', recipient.name)
-  //   setFieldsValue({})
-  // }
-
-  getAddress = (addressList) => {
-    return {
-      city: addressList[1],
-      district: addressList[2],
-      province: addressList[0],
-    }
-  }
-
   render () {
     const {
       modalVisible,
@@ -113,30 +94,35 @@ class OrderForm extends React.Component {
       visible: modalVisible,
       recipientContacts,
       onOk (value, createNew) {
+        const region = value.region
         dispatch({
           type: 'order/setCurrentItem',
           payload: {
             currentItem: {
               ...currentItem,
-              receiver: value,
+              receiver: {
+                ...value,
+                province: region[0],
+                city: region[1],
+                district: region[2],
+              },
             },
           },
         })
 
         if (createNew) {
-          const addressList = value.recipient.region
           const recipient = value.recipient
           dispatch({
             type: 'contact/create',
             payload: {
               address: recipient.address,
-              province: addressList[0],
-              city: addressList[1],
-              district: addressList[2],
+              province: region[0],
+              city: region[1],
+              district: region[2],
               company: recipient.company,
               name: recipient.name,
               phone: recipient.phone,
-              type: 0,
+              type: 1,
             },
           })
         }
@@ -168,30 +154,35 @@ class OrderForm extends React.Component {
       visible: modalVisible,
       senderContacts,
       onOk (value, createNew) {
+        const region = value.region
         dispatch({
           type: 'order/setCurrentItem',
           payload: {
             currentItem: {
               ...currentItem,
-              sender: value,
+              sender: {
+                ...value,
+                province: region[0],
+                city: region[1],
+                district: region[2],
+              },
             },
           },
         })
 
         if (createNew) {
-          const addressList = value.sender.region
           const sender = value.sender
           dispatch({
             type: 'contact/create',
             payload: {
               address: sender.address,
-              province: addressList[0],
-              city: addressList[1],
-              district: addressList[2],
+              province: region[0],
+              city: region[1],
+              district: region[2],
               company: sender.company,
               name: sender.name,
               phone: sender.phone,
-              type: 1,
+              type: 0,
             },
           })
         }
