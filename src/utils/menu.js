@@ -29,4 +29,10 @@ module.exports = [
     icon: 'api',
     router: '/express/tracing',
   },
+  {
+    id: 2,
+    icon: 'laptop',
+    name: '注册',
+    router: '/register',
+  },
 ]

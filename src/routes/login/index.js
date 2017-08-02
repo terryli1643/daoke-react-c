@@ -59,6 +59,9 @@ const Login = ({
             登录
           </Button>
           <p>
+            <a href="/register">注册</a>
+          </p>
+          <p>
             <a href="/home">进入首页</a>
           </p>
         </Row>
