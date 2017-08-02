@@ -14,17 +14,6 @@ const Query = ({ location, dispatch, order, loading }) => {
     loading: loading.effects['order/query'],
     pagination,
     location,
-    onChange (page) {
-      const { query, pathname } = location
-      dispatch(routerRedux.push({
-        pathname,
-        query: {
-          ...query,
-          page: page.current,
-          pageSize: page.pageSize,
-        },
-      }))
-    },
   }
 
   const filterProps = {
@@ -33,7 +22,6 @@ const Query = ({ location, dispatch, order, loading }) => {
       ...location.query,
     },
     onFilterChange (value) {
-      console.log(location.pathname)
       dispatch(routerRedux.push({
         pathname: location.pathname,
         query: {
@@ -42,18 +30,6 @@ const Query = ({ location, dispatch, order, loading }) => {
           pageSize,
         },
       }))
-    },
-    onSearch (fieldsValue) {
-      fieldsValue.keyword.length ?
-        dispatch(routerRedux.push({
-          pathname: '/order',
-          query: {
-            field: fieldsValue.field,
-            keyword: fieldsValue.keyword,
-          },
-        })) : dispatch(routerRedux.push({
-          pathname: '/order',
-        }))
     },
   }
 

@@ -6,10 +6,10 @@ import { Form, Input, Button, Row, Col, DatePicker } from 'antd'
 import 'moment/locale/zh-cn'
 
 moment.locale('zh-cn')
+const { RangePicker } = DatePicker
+const dateFormat = 'YYYY-MM-DD'
 
 const ColProps = {
-  xs: 24,
-  sm: 12,
   style: {
     marginBottom: 16,
   },
@@ -17,7 +17,6 @@ const ColProps = {
 
 const TwoColProps = {
   ...ColProps,
-  xl: 96,
 }
 
 const Filter = ({
@@ -28,9 +27,10 @@ const Filter = ({
   },
 }) => {
   const handleFields = (fields) => {
-    const { createTime } = fields
-    if (createTime) {
-      fields.createTime = [createTime.format('YYYY-MM-DD'), createTime.format('YYYY-MM-DD')]
+    const { dates } = fields
+    if (dates && dates.length > 0) {
+      fields.startDate = dates[0].format(dateFormat)
+      fields.endDate = dates[1].format(dateFormat)
     }
     return fields
   }
@@ -38,33 +38,43 @@ const Filter = ({
   const handleSubmit = () => {
     let fields = getFieldsValue()
     fields = handleFields(fields)
-    onFilterChange(fields)
+    onFilterChange({
+      startDate: fields.startDate,
+      endDate: fields.endDate,
+      keyword: fields.keyword,
+    })
   }
 
-  const handleChange = (key, values) => {
-    let fields = getFieldsValue()
-    fields[key] = values
-    fields = handleFields(fields)
-    onFilterChange(fields)
-  }
+  // const handleChange = (key, values) => {
+  //   let fields = getFieldsValue()
+  //   fields[key] = values
+  //   fields = handleFields(fields)
+  //   onFilterChange(fields)
+  // }
 
   return (
     <Row gutter={24}>
-      <Col {...ColProps} xl={{ span: 6 }} md={{ span: 8 }} sm={{ span: 12 }}>
-        <FilterItem label="时间">
-          {getFieldDecorator('startDate')(
-            <DatePicker format="YYYY-MM-DD" onChange={handleChange.bind('', 'startDate')} />
+      <Col {...ColProps}>
+        <FilterItem label="日期">
+          {getFieldDecorator('dates')(
+            <RangePicker
+              style={{ width: '100%' }}
+              size="large"
+              defaultValue={[moment(), moment()]}
+              format={dateFormat}
+              ranges={{ 今天: [moment(), moment()] }}
+            />
           )}
         </FilterItem>
       </Col>
-      <Col {...ColProps} xl={{ span: 2 }} md={{ span: 4 }} sm={{ span: 6 }}>
+      <Col {...ColProps}>
         <FilterItem label="条件">
-          {getFieldDecorator('startDate')(
-            <Input onChange={handleChange.bind('', 'startDate')} />
+          {getFieldDecorator('keyword')(
+            <Input size="large" placeholder="可根据姓名、电话、单号查询" />
           )}
         </FilterItem>
       </Col>
-      <Col {...TwoColProps} xl={{ span: 10 }} md={{ span: 24 }} sm={{ span: 24 }}>
+      <Col {...TwoColProps}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div >
             <Button type="primary" size="large" className="margin-right" onClick={handleSubmit}>查询</Button>

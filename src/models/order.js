@@ -22,16 +22,16 @@ export default modelExtend(pageModel, {
   },
 
   subscriptions: {
-    setup ({ dispatch, history }) {
-      history.listen(location => {
-        if (location.pathname === '/record/query') {
-          dispatch({
-            type: 'query',
-            payload: location.query,
-          })
-        }
-      })
-    },
+    // setup ({ dispatch, history }) {
+    //   history.listen(location => {
+    //     if (location.pathname === '/order/query') {
+    //       dispatch({
+    //         type: 'query',
+    //         payload: location.query,
+    //       })
+    //     }
+    //   })
+    // },
   },
 
   effects: {
