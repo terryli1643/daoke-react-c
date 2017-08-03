@@ -94,40 +94,13 @@ const Routers = function ({ history, app }) {
             }, 'register')
           },
         }, {
-          path: 'request',
+          path: 'account',
           getComponent (nextState, cb) {
             require.ensure([], require => {
-              cb(null, require('./routes/request/'))
-            }, 'request')
-          },
-        }, {
-          path: 'chart/lineChart',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/chart/lineChart/'))
-            }, 'chart-lineChart')
-          },
-        }, {
-          path: 'chart/barChart',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/chart/barChart/'))
-            }, 'chart-barChart')
-          },
-        }, {
-          path: 'chart/areaChart',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              cb(null, require('./routes/chart/areaChart/'))
-            }, 'chart-areaChart')
-          },
-        }, {
-          path: 'post',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('./models/post'))
-              cb(null, require('./routes/post/'))
-            }, 'post')
+              registerModel(app, require('./models/contact'))
+              registerModel(app, require('./models/app'))
+              cb(null, require('./routes/account/'))
+            }, 'account')
           },
         }, {
           path: '*',

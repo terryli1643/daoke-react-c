@@ -35,4 +35,26 @@ module.exports = [
     name: '注册',
     router: '/register',
   },
+  {
+    id: 3,
+    icon: 'user',
+    name: '个人中心',
+    router: '/account',
+  },
+  {
+    id: 31,
+    bpid: 3,
+    mpid: 3,
+    name: '基本信息',
+    icon: 'api',
+    router: '/account/myaccount',
+  },
+  {
+    id: 32,
+    bpid: 3,
+    mpid: 3,
+    name: '通讯录',
+    icon: 'api',
+    router: '/account/addressbook',
+  },
 ]
