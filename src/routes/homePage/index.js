@@ -1,17 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Icon, Carousel, Alert } from 'antd'
+import { Row, Col, Icon } from 'antd'
 
 const HomePage = () => {
   return (
     <div className="content-inner">
       <h2>欢迎使用稻壳物流，您身边的快递小助手！</h2>
-      <Carousel autoplay dots="false">
-        <div><Alert message="xxx快递站点 小丁丁中奖，奖品充气娃娃一个" type="warning" /></div>
-        <div><Alert message="xxx快递站点 小丁丁中奖，奖品充气娃娃一个" type="warning" /></div>
-        <div><Alert message="xxx快递站点 小丁丁中奖，奖品充气娃娃一个" type="warning" /></div>
-        <div><Alert message="xxx快递站点 小丁丁中奖，奖品充气娃娃一个" type="warning" /></div>
-      </Carousel>
+
       <div style={{ margin: '20px 0' }}>
         <Row gutter={48}>
           <Col span={8}>

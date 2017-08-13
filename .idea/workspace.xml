@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="95521f36-30bb-4cb4-9df5-3edb2f222fb3" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/order/Form.js" afterPath="$PROJECT_DIR$/src/components/order/Form.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/models/contact.js" afterPath="$PROJECT_DIR$/src/models/contact.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/account/addressbook.js" afterPath="$PROJECT_DIR$/src/routes/account/addressbook.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/account/index.js" afterPath="$PROJECT_DIR$/src/routes/account/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/services/contact.js" afterPath="$PROJECT_DIR$/src/services/contact.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utils/config.js" afterPath="$PROJECT_DIR$/src/utils/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utils/menu.js" afterPath="$PROJECT_DIR$/src/utils/menu.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/homePage/index.js" afterPath="$PROJECT_DIR$/src/routes/homePage/index.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -77,11 +71,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="addressbook.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="addressbook.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/routes/account/addressbook.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-171">
-              <caret line="41" column="25" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
+            <state relative-caret-position="80">
+              <caret line="60" column="12" lean-forward="true" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -92,7 +86,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/routes/account/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
+            <state relative-caret-position="304">
               <caret line="16" column="8" lean-forward="true" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -101,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/routes/homePage/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="31" />
+            <state relative-caret-position="95">
+              <caret line="5" column="10" lean-forward="true" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -172,8 +166,8 @@
       <find>recipientContacts</find>
       <find>address</find>
       <find>location</find>
-      <find>connect</find>
       <find>goAddressbook</find>
+      <find>connect</find>
     </findStrings>
     <replaceStrings>
       <replace>SenderModal</replace>
@@ -225,7 +219,6 @@
         <option value="$PROJECT_DIR$/src/routes/order/detail/index.js" />
         <option value="$PROJECT_DIR$/src/mock/record.js" />
         <option value="$PROJECT_DIR$/src/routes/order/send/index.js" />
-        <option value="$PROJECT_DIR$/src/routes/homePage/index.js" />
         <option value="$PROJECT_DIR$/src/services/express.js" />
         <option value="$PROJECT_DIR$/src/models/express.js" />
         <option value="$PROJECT_DIR$/src/routes/express/index.js" />
@@ -255,6 +248,7 @@
         <option value="$PROJECT_DIR$/src/utils/menu.js" />
         <option value="$PROJECT_DIR$/src/routes/account/index.js" />
         <option value="$PROJECT_DIR$/src/routes/account/addressbook.js" />
+        <option value="$PROJECT_DIR$/src/routes/homePage/index.js" />
       </list>
     </option>
   </component>
@@ -586,7 +580,7 @@
       <workItem from="1501297531696" duration="16887000" />
       <workItem from="1501341951059" duration="26339000" />
       <workItem from="1502588435812" duration="1618000" />
-      <workItem from="1502596651794" duration="11442000" />
+      <workItem from="1502596651794" duration="11541000" />
     </task>
     <task id="LOCAL-00001" summary="修改启动端口为9000">
       <created>1498916418006</created>
@@ -735,11 +729,18 @@
       <option name="project" value="LOCAL" />
       <updated>1502617700835</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="增加通讯录">
+      <created>1502627843112</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1502627843112</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140693000" />
+    <option name="totallyTimeSpent" value="140792000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1171,16 +1172,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/routes/homePage/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="24" selection-end-line="56" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/order/Form.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2793">
@@ -1199,7 +1190,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/routes/account/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
+        <state relative-caret-position="304">
           <caret line="16" column="8" lean-forward="true" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
@@ -1209,8 +1200,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/routes/account/addressbook.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
-          <caret line="41" column="25" lean-forward="false" selection-start-line="41" selection-start-column="25" selection-end-line="41" selection-end-column="25" />
+        <state relative-caret-position="80">
+          <caret line="60" column="12" lean-forward="true" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routes/homePage/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="5" column="10" lean-forward="true" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
