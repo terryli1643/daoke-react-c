@@ -21,7 +21,7 @@ module.exports = {
     dashboard: '/dashboard',
     orders: '/api/v1/orders',
     order: '/api/v1/order',
-    contact: '/api/v1/contactinfo',
+    contact: '/api/v1/contactinfo/:id',
     contacts: '/api/v1/contactinfos',
     expressTracing: '/api/v1/express/tracing',
   },

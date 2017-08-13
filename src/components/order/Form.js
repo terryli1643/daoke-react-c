@@ -111,7 +111,7 @@ class OrderForm extends React.Component {
         })
 
         if (createNew) {
-          const recipient = value.recipient
+          const recipient = value
           dispatch({
             type: 'contact/create',
             payload: {
@@ -171,7 +171,7 @@ class OrderForm extends React.Component {
         })
 
         if (createNew) {
-          const sender = value.sender
+          const sender = value
           dispatch({
             type: 'contact/create',
             payload: {

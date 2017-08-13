@@ -9,20 +9,8 @@ export default modelExtend(pageModel, {
   namespace: 'contact',
 
   state: {
-    recipientContacts: [{
-      name: 'lizhen',
-      phone: '18113039957',
-      region: ['四川省', '成都市', '武侯区'],
-      address: '华阳麓山大道',
-      company: 'ffdsafdsa',
-    }],
-    senderContacts: [{
-      name: 'lizhen2',
-      phone: '18113039927',
-      region: ['四川省', '成都市', '武侯区'],
-      address: '华阳麓山大道22',
-      company: 'ffdsafdsa2',
-    }],
+    recipientContacts: [],
+    senderContacts: [],
     currentItem: {},
   },
   subscriptions: {
@@ -40,11 +28,9 @@ export default modelExtend(pageModel, {
   },
   effects: {
 
-    *'delete' ({ payload }, { call, put, select }) {
+    *'delete' ({ payload }, { call, put }) {
       const data = yield call(remove, { id: payload })
-      const { selectedRowKeys } = yield select(_ => _.contact)
       if (data.success) {
-        yield put({ type: 'updateState', payload: { selectedRowKeys: selectedRowKeys.filter(_ => _ !== payload) } })
         yield put({ type: 'query' })
       } else {
         throw data

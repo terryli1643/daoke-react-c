@@ -6,7 +6,25 @@ import { DropOption } from '../../components'
 
 const confirm = Modal.confirm
 
-const AddressBook = ({ onDeleteItem, onEditItem, contacts, type }) => {
+const AddressBook = ({ dispatch, location, contacts }) => {
+  const type = location.query.type
+  console.log(type)
+  const onEditItem = (item) => {
+    dispatch({
+      type: 'contact/showModal',
+      payload: {
+        modalType: 'update',
+        currentItem: item,
+      },
+    })
+  }
+  const onDeleteItem = (id) => {
+    dispatch({
+      type: 'contact/delete',
+      payload: id,
+    })
+  }
+
   const handleMenuClick = (record, e) => {
     if (e.key === '1') {
       onEditItem(record)
@@ -21,11 +39,11 @@ const AddressBook = ({ onDeleteItem, onEditItem, contacts, type }) => {
   }
   const columns = [
     {
-      title: type === 1 ? '收件人姓名' : '发件人姓名',
+      title: type === '1' ? '收件人姓名' : '发件人姓名',
       dataIndex: 'name',
       key: 'name',
     }, {
-      title: type === 1 ? '收件人电话' : '发件人电话',
+      title: type === '1' ? '收件人电话' : '发件人电话',
       dataIndex: 'phone',
       key: 'phone',
     }, {
@@ -39,7 +57,7 @@ const AddressBook = ({ onDeleteItem, onEditItem, contacts, type }) => {
   ]
   return (
     <div className="content-inner">
-      <h2>{type === 1 ? '收件人' : '发件人'}</h2>
+      <h2>{type === '1' ? '收件人' : '发件人'}</h2>
       <Table
         bordered
         columns={columns}
