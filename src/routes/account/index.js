@@ -4,9 +4,8 @@ import { connect } from 'dva'
 import { Row, Col } from 'antd'
 
 const Account = ({ app }) => {
-  // const { list, queryAll } = contact
   const { user } = app
-  console.log(user)
+
   return (
     <div className="content-inner">
       <Row>

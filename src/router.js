@@ -53,30 +53,6 @@ const Routers = function ({ history, app }) {
             }, 'expressTracing')
           },
         }, {
-          path: 'dashboard',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('./models/dashboard'))
-              cb(null, require('./routes/dashboard/'))
-            }, 'dashboard')
-          },
-        }, {
-          path: 'user',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('./models/user'))
-              cb(null, require('./routes/user/'))
-            }, 'user')
-          },
-        }, {
-          path: 'user/:id',
-          getComponent (nextState, cb) {
-            require.ensure([], require => {
-              registerModel(app, require('./models/user/detail'))
-              cb(null, require('./routes/user/detail/'))
-            }, 'user-detail')
-          },
-        }, {
           path: 'login',
           getComponent (nextState, cb) {
             require.ensure([], require => {
@@ -101,6 +77,23 @@ const Routers = function ({ history, app }) {
               registerModel(app, require('./models/app'))
               cb(null, require('./routes/account/'))
             }, 'account')
+          },
+        }, {
+          path: 'account/info',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('./models/contact'))
+              registerModel(app, require('./models/app'))
+              cb(null, require('./routes/account/'))
+            }, 'info')
+          },
+        }, {
+          path: 'account/addressbook',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              registerModel(app, require('./models/contact'))
+              cb(null, require('./routes/account/addressbook'))
+            }, 'addressbook')
           },
         }, {
           path: '*',

@@ -25,7 +25,19 @@ export default modelExtend(pageModel, {
     }],
     currentItem: {},
   },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      history.listen(location => {
+        if (location.pathname === '/account/addressbook') {
+          dispatch({
+            type: 'queryAll',
+            payload: location.query,
+          })
+        }
+      })
+    },
 
+  },
   effects: {
 
     *'delete' ({ payload }, { call, put, select }) {
