@@ -49,7 +49,7 @@ const HomePage = () => {
           </Col>
           <Col span={8}>
             <div style={{ margin: '20px 0' }}>
-              <a href="/contact">
+              <a href="/contactus">
                 <Icon type="phone" style={{ fontSize: 50, width: '90px', height: '90px' }}>
                   <div style={{ fontSize: 13, margin: '20px 0' }}>联系我们</div>
                 </Icon>

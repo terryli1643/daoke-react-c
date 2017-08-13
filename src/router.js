@@ -96,6 +96,20 @@ const Routers = function ({ history, app }) {
             }, 'addressbook')
           },
         }, {
+          path: 'contactus',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/contactus'))
+            }, 'contactus')
+          },
+        }, {
+          path: 'news',
+          getComponent (nextState, cb) {
+            require.ensure([], require => {
+              cb(null, require('./routes/news'))
+            }, 'news')
+          },
+        }, {
           path: '*',
           getComponent (nextState, cb) {
             require.ensure([], require => {
